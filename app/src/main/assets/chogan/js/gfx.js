@@ -258,51 +258,222 @@ G.person=function(ctx,p,time,moving){
   ctx.restore();
 };
 
-/* ---------- پرتره دیالوگ ---------- */
+/* ---------- پرتره دیالوگ (کیفیت بالا — رسم در ۱۱۲ واحد منطقی، هر اندازه بوم) ----------
+   پالت شخصیت: CH.CHARS — حالت چهره: exp = grin|calm|worry|smirk|strict */
 G.portrait=function(ctx,id,size){
   const P=CH.CHARS[id]||CH.CHARS.villager;
   const s=size/112;
   ctx.save(); ctx.scale(s,s); ctx.clearRect(0,0,112,112);
-  // پس‌زمینه
-  const g=ctx.createLinearGradient(0,0,0,112);
-  g.addColorStop(0,'#2a4a80'); g.addColorStop(1,'#152a4d');
-  ctx.fillStyle=g; ctx.fillRect(0,0,112,112);
-  // هاله
-  ctx.fillStyle='rgba(232,184,75,.12)'; ctx.beginPath(); ctx.arc(56,52,44,0,TAU); ctx.fill();
-  const skin=P.skin||'#eab98c', hair=P.hair||'#2e2016';
-  // گردن
-  ctx.fillStyle=shade(skin,-20); ctx.fillRect(46,74,20,18);
-  // شانه / عبا
-  ctx.fillStyle=P.robe||'#7a6a4a';
-  ctx.beginPath(); ctx.moveTo(14,112); ctx.quadraticCurveTo(56,72,98,112); ctx.closePath(); ctx.fill();
-  // سر
-  ctx.fillStyle=skin; ctx.strokeStyle=shade(skin,-60); ctx.lineWidth=2;
+  const skin=P.skin||'#eab98c', hair=P.hair||'#2e2016', exp=P.exp||'calm';
+  const eyeCol=P.eye||'#332415';
+
+  /* پس‌زمینه: شب دربار + موتیف کاشی */
+  const bg=ctx.createLinearGradient(0,0,0,112);
+  bg.addColorStop(0,'#2a4a80'); bg.addColorStop(.6,'#1a2f56'); bg.addColorStop(1,'#0e1c33');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,112,112);
+  // ستارهٔ هشت‌پر کم‌رنگ پشت سر
+  ctx.save(); ctx.translate(56,54); ctx.globalAlpha=.14;
+  ctx.fillStyle='#e8b84b'; ctx.beginPath();
+  for(let i=0;i<16;i++){ const a=i*TAU/16, r=i%2?14:30; const px=Math.cos(a)*r, py=Math.sin(a)*r; i?ctx.lineTo(px,py):ctx.moveTo(px,py); }
+  ctx.closePath(); ctx.fill(); ctx.restore();
+  // هالهٔ نور پشت سر
+  const halo=ctx.createRadialGradient(56,50,6,56,50,50);
+  halo.addColorStop(0,'rgba(255,236,180,.30)'); halo.addColorStop(1,'rgba(255,236,180,0)');
+  ctx.fillStyle=halo; ctx.fillRect(0,0,112,112);
+
+  /* شانه‌ها و عبا */
+  const robe=P.robe||'#7a6a4a';
+  const robeG=ctx.createLinearGradient(0,74,0,112);
+  robeG.addColorStop(0,shade(robe,14)); robeG.addColorStop(1,shade(robe,-36));
+  ctx.fillStyle=robeG; ctx.strokeStyle=shade(robe,-58); ctx.lineWidth=1.6;
+  ctx.beginPath(); ctx.moveTo(6,112); ctx.quadraticCurveTo(20,80,42,74);
+  ctx.lineTo(70,74); ctx.quadraticCurveTo(92,80,106,112); ctx.closePath(); ctx.fill(); ctx.stroke();
+  // یقهٔ باز (پیراهن زیرین)
+  ctx.fillStyle='#f0dcae';
+  ctx.beginPath(); ctx.moveTo(47,74); ctx.lineTo(56,88); ctx.lineTo(65,74); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle=shade(robe,-58); ctx.lineWidth=1.2; ctx.stroke();
+  // گلدوزی سینه
+  ctx.fillStyle='rgba(232,184,75,.9)';
+  ctx.beginPath(); ctx.arc(38,94,1.7,0,TAU); ctx.fill();
+  ctx.beginPath(); ctx.arc(74,94,1.7,0,TAU); ctx.fill();
+  ctx.beginPath(); ctx.arc(30,104,1.5,0,TAU); ctx.fill();
+  ctx.beginPath(); ctx.arc(82,104,1.5,0,TAU); ctx.fill();
+
+  /* گردن */
+  const neck=ctx.createLinearGradient(0,64,0,78);
+  neck.addColorStop(0,skin); neck.addColorStop(1,shade(skin,-34));
+  ctx.fillStyle=neck; ctx.fillRect(47,62,18,14);
+  ctx.fillStyle='rgba(0,0,0,.18)'; ctx.beginPath(); ctx.ellipse(56,68,10,4,0,0,TAU); ctx.fill();
+
+  /* گوش‌ها */
+  if(!P.female||P.hat==='scarf'){ /* زنان با روسری، گوش پیداست */ }
+  ctx.fillStyle=shade(skin,-8);
+  ctx.beginPath(); ctx.ellipse(30,54,4,6,0,0,TAU); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(82,54,4,6,0,0,TAU); ctx.fill();
+
+  /* سر با گرادیان پوست */
+  const face=ctx.createRadialGradient(50,42,6,56,54,36);
+  face.addColorStop(0,shade(skin,20)); face.addColorStop(.65,skin); face.addColorStop(1,shade(skin,-24));
+  ctx.fillStyle=face; ctx.strokeStyle=shade(skin,-64); ctx.lineWidth=1.8;
   ctx.beginPath(); ctx.ellipse(56,52,26,29,0,0,TAU); ctx.fill(); ctx.stroke();
-  // موی زن
-  if(P.female){ ctx.fillStyle=hair; ctx.beginPath(); ctx.ellipse(56,46,30,30,0,Math.PI*.9,Math.PI*2.1); ctx.fill();
-    ctx.fillStyle=P.scarf||'#8a3a4a'; ctx.beginPath(); ctx.ellipse(56,52,32,33,0,Math.PI*.85,Math.PI*2.15); ctx.fill();
-    ctx.fillStyle=skin; ctx.beginPath(); ctx.ellipse(56,56,20,22,0,0,TAU); ctx.fill(); }
-  else { ctx.fillStyle=hair; ctx.beginPath(); ctx.ellipse(56,40,26,18,0,Math.PI,TAU); ctx.fill(); }
-  // ابرو و چشم
+  // سایهٔ پیشانی زیر کلاه
+  ctx.fillStyle='rgba(0,0,0,.10)'; ctx.beginPath(); ctx.ellipse(56,34,24,10,0,0,TAU); ctx.fill();
+
+  /* مو */
+  if(P.female){
+    ctx.fillStyle=hair; ctx.beginPath(); ctx.ellipse(56,46,30,31,0,Math.PI*.88,Math.PI*2.12); ctx.fill();
+  } else {
+    ctx.fillStyle=hair; ctx.beginPath(); ctx.ellipse(56,40,26,19,0,Math.PI,TAU); ctx.fill();
+    // خط ریشِ کنار صورت
+    ctx.beginPath(); ctx.ellipse(32,48,4,10,0.2,0,TAU); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(80,48,4,10,-0.2,0,TAU); ctx.fill();
+  }
+  // برقِ مو
+  ctx.strokeStyle='rgba(255,255,255,.28)'; ctx.lineWidth=2; ctx.lineCap='round';
+  ctx.beginPath(); ctx.arc(56,44,22,Math.PI*1.15,Math.PI*1.5); ctx.stroke();
+
+  /* ریش */
+  if(P.beard){
+    const bc=P.beard;
+    // ریش کامل: از شقیقه‌ها تا زیر چانه
+    ctx.fillStyle=bc; ctx.strokeStyle=shade(bc,-30); ctx.lineWidth=1.4;
+      ctx.beginPath();
+      ctx.moveTo(34,52);
+      ctx.quadraticCurveTo(30,72,40,82);
+      ctx.quadraticCurveTo(48,90,56,90);
+      ctx.quadraticCurveTo(64,90,72,82);
+      ctx.quadraticCurveTo(82,72,78,52);
+      ctx.quadraticCurveTo(72,66,56,68);
+      ctx.quadraticCurveTo(40,66,34,52);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      // خط باریکِ سبیل
+      ctx.strokeStyle=shade(bc,-18); ctx.lineWidth=2.6;
+      ctx.beginPath(); ctx.moveTo(46,64); ctx.quadraticCurveTo(56,68,66,64); ctx.stroke();
+  }
+
+  /* ابروها بر اساس حالت */
+  ctx.save();
+  const tilt={strict:-.35,worry:.3,smirk:-.15,grin:0,calm:.05}[exp]||0;
   ctx.fillStyle='#241608';
-  ctx.beginPath(); ctx.ellipse(45,48,2.6,1.4,-.15,0,TAU); ctx.fill();
-  ctx.beginPath(); ctx.ellipse(67,48,2.6,1.4,.15,0,TAU); ctx.fill();
-  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.ellipse(45,54,4.5,5,0,0,TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(67,54,4.5,5,0,0,TAU); ctx.fill();
-  ctx.fillStyle='#241608'; ctx.beginPath(); ctx.arc(45,54,2.4,0,TAU); ctx.fill(); ctx.beginPath(); ctx.arc(67,54,2.4,0,TAU); ctx.fill();
-  // لبخند
-  ctx.strokeStyle=shade(skin,-70); ctx.lineWidth=2.4; ctx.lineCap='round';
-  ctx.beginPath(); ctx.arc(56,64,9,0.2*Math.PI,0.8*Math.PI); ctx.stroke();
-  if(P.beard){ ctx.strokeStyle=P.beard; ctx.lineWidth=3;
-    ctx.beginPath(); ctx.arc(56,62,13,0.15*Math.PI,0.85*Math.PI); ctx.stroke();
-    if(P.beard==='#ddd'){ ctx.fillStyle='rgba(230,230,230,.85)'; ctx.beginPath(); ctx.ellipse(56,78,14,8,0,0,Math.PI); ctx.fill(); } }
-  // کلاه
+  // چپ
+  ctx.save(); ctx.translate(45,45); ctx.rotate(tilt); ctx.beginPath(); ctx.ellipse(0,0,5.4,1.7,0,0,TAU); ctx.fill(); ctx.restore();
+  // راست (قرینه)
+  ctx.save(); ctx.translate(67,45); ctx.rotate(-tilt); ctx.beginPath(); ctx.ellipse(0,0,5.4,1.7,0,0,TAU); ctx.fill(); ctx.restore();
+  ctx.restore();
+
+  /* چشم‌ها: سفید، عنبیه، مردمک، برق */
+  for(const ex of [45,67]){
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.ellipse(ex,54,4.6,5,0,0,TAU); ctx.fill();
+    ctx.strokeStyle='rgba(70,50,30,.55)'; ctx.lineWidth=1.1; ctx.stroke();
+    ctx.fillStyle=eyeCol; ctx.beginPath(); ctx.arc(ex,54.6,2.7,0,TAU); ctx.fill();
+    ctx.fillStyle='#100a05'; ctx.beginPath(); ctx.arc(ex,54.6,1.4,0,TAU); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.95)'; ctx.beginPath(); ctx.arc(ex-1.1,53.3,.9,0,TAU); ctx.fill();
+    // پلک بالا
+    ctx.strokeStyle='rgba(40,26,12,.8)'; ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.arc(ex,54.4,4.7,Math.PI*1.12,Math.PI*1.88); ctx.stroke();
+    if(P.female){ // مژه
+      ctx.beginPath(); ctx.moveTo(ex-4.4,51.4); ctx.lineTo(ex-6,50.2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ex+4.4,51.4); ctx.lineTo(ex+6,50.2); ctx.stroke();
+    }
+  }
+
+  /* بینی */
+  ctx.strokeStyle=shade(skin,-52); ctx.lineWidth=1.7; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(56,55); ctx.quadraticCurveTo(58,59,55.4,61); ctx.stroke();
+  ctx.fillStyle='rgba(0,0,0,.14)'; ctx.beginPath(); ctx.arc(53.6,61.4,1,0,TAU); ctx.fill(); ctx.beginPath(); ctx.arc(57.8,61.4,1,0,TAU); ctx.fill();
+
+  /* لپ‌های سرخ جوان‌ها */
+  if(exp==='grin'){ ctx.fillStyle='rgba(224,110,90,.22)';
+    ctx.beginPath(); ctx.ellipse(42,61,4.4,3,-.2,0,TAU); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(70,61,4.4,3,.2,0,TAU); ctx.fill(); }
+
+  /* دهان بر اساس حالت */
+  ctx.strokeStyle=shade(skin,-70); ctx.lineWidth=2.1;
+  if(exp==='grin'){
+    ctx.fillStyle='#7a3a30';
+    ctx.beginPath(); ctx.moveTo(48,67); ctx.quadraticCurveTo(56,75,64,67); ctx.quadraticCurveTo(56,70,48,67); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.moveTo(50.5,67.6); ctx.quadraticCurveTo(56,69.4,61.5,67.6); ctx.quadraticCurveTo(56,68.6,50.5,67.6); ctx.closePath(); ctx.fill();
+  } else if(exp==='smirk'){
+    ctx.beginPath(); ctx.moveTo(49,68); ctx.quadraticCurveTo(57,70,64,65.6); ctx.stroke();
+  } else if(exp==='worry'){
+    ctx.beginPath(); ctx.moveTo(51,69); ctx.quadraticCurveTo(56,66.8,61,69); ctx.stroke();
+  } else if(exp==='strict'){
+    ctx.beginPath(); ctx.moveTo(50,68); ctx.lineTo(62,68); ctx.stroke();
+  } else { // calm — لبخند آرام
+    ctx.beginPath(); ctx.arc(56,64,8,Math.PI*.2,Math.PI*.8); ctx.stroke();
+  }
+
+  /* کلاه‌ها */
   const hat=P.hat;
-  if(hat==='turban'){ ctx.fillStyle=P.hatCol||'#8a6a4a'; ctx.beginPath(); ctx.ellipse(56,26,27,14,0,0,TAU); ctx.fill(); ctx.fillStyle=shade(P.hatCol||'#8a6a4a',25); ctx.beginPath(); ctx.ellipse(56,20,20,8,0,0,TAU); ctx.fill(); }
-  else if(hat==='cap'){ ctx.fillStyle=P.hatCol||'#4a3a26'; ctx.beginPath(); ctx.arc(56,32,24,Math.PI,TAU); ctx.fill(); ctx.fillRect(30,28,52,8); }
-  else if(hat==='helmet'){ ctx.fillStyle='#5a5f68'; ctx.beginPath(); ctx.arc(56,42,28,Math.PI,TAU); ctx.fill(); ctx.fillStyle='#e8b84b'; ctx.fillRect(28,38,56,7); }
-  else if(hat==='royal'){ ctx.fillStyle='#caa84f'; ctx.beginPath(); ctx.ellipse(56,24,29,13,0,0,TAU); ctx.fill(); ctx.fillStyle='#1c3a6e'; ctx.beginPath(); ctx.ellipse(56,20,20,8,0,0,TAU); ctx.fill(); ctx.fillStyle='#e8b84b'; ctx.beginPath(); ctx.moveTo(56,10); ctx.lineTo(60,18); ctx.lineTo(56,15); ctx.lineTo(52,18); ctx.closePath(); ctx.fill(); }
-  // رخصت زن: گوشواره
-  if(P.female){ ctx.fillStyle='#e8b84b'; ctx.beginPath(); ctx.arc(32,58,3,0,TAU); ctx.fill(); ctx.beginPath(); ctx.arc(80,58,3,0,TAU); ctx.fill(); }
+  if(hat==='turban'){
+    const hc=P.hatCol||'#8a6a4a';
+    ctx.fillStyle=hc; ctx.strokeStyle=shade(hc,-42); ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.ellipse(56,25,28,15,0,0,TAU); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=shade(hc,24);
+    ctx.beginPath(); ctx.ellipse(56,19,20,8.5,0,0,TAU); ctx.fill();
+    ctx.strokeStyle=shade(hc,-30); ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.arc(48,26,9,Math.PI*.9,Math.PI*1.7); ctx.stroke();
+    ctx.beginPath(); ctx.arc(64,25,8,Math.PI*.8,Math.PI*1.9); ctx.stroke();
+  } else if(hat==='cap'){
+    const hc=P.hatCol||'#4a3a26';
+    ctx.fillStyle=hc; ctx.beginPath(); ctx.arc(56,31,24,Math.PI,TAU); ctx.fill();
+    ctx.fillRect(30,28,52,8);
+    ctx.fillStyle=shade(hc,26); ctx.beginPath(); ctx.ellipse(50,20,13,6,-.3,0,TAU); ctx.fill();
+    ctx.strokeStyle=shade(hc,-40); ctx.lineWidth=1.4; ctx.beginPath(); ctx.arc(56,31,24,Math.PI,TAU); ctx.stroke();
+  } else if(hat==='helmet'){
+    const m=ctx.createLinearGradient(30,14,80,42);
+    m.addColorStop(0,'#8a92a0'); m.addColorStop(.5,'#5a5f68'); m.addColorStop(1,'#3c4048');
+    ctx.fillStyle=m; ctx.beginPath(); ctx.arc(56,40,29,Math.PI,TAU); ctx.fill();
+    ctx.fillStyle='#e8b84b'; ctx.fillRect(27,36,58,7);
+    ctx.fillStyle='#b9862a';
+    for(const rx of [36,56,76]){ ctx.beginPath(); ctx.arc(rx,39.5,2,0,TAU); ctx.fill(); }
+    ctx.fillStyle='rgba(255,255,255,.35)'; ctx.beginPath(); ctx.ellipse(48,22,10,5,-.4,0,TAU); ctx.fill();
+  } else if(hat==='royal'){
+    ctx.fillStyle='#caa84f'; ctx.beginPath(); ctx.ellipse(56,22,29,13,0,0,TAU); ctx.fill();
+    ctx.fillStyle='#1c3a6e'; ctx.beginPath(); ctx.ellipse(56,18,20,8,0,0,TAU); ctx.fill();
+    ctx.fillStyle='#e8b84b'; ctx.beginPath(); ctx.moveTo(56,4); ctx.lineTo(61,14); ctx.lineTo(56,10.6); ctx.lineTo(51,14); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#c8433a'; ctx.beginPath(); ctx.arc(56,9,2.6,0,TAU); ctx.fill();
+  } else if(hat==='hat'){
+    const hc=P.hatCol||'#8a5a2a';
+    ctx.fillStyle=hc; ctx.beginPath(); ctx.ellipse(56,26,27,7,0,0,TAU); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(56,18,15,10,0,0,TAU); ctx.fill();
+    ctx.fillStyle=shade(hc,-30); ctx.fillRect(41,22,30,5);
+  } else if(hat==='scarf'){
+    const sc=P.hatCol||'#8a3a4a';
+    // روسری کامل دور صورت
+    ctx.fillStyle=sc;
+    ctx.beginPath(); ctx.ellipse(56,50,33,35,0,0,TAU); ctx.fill();
+    ctx.fillStyle=skin;
+    ctx.beginPath(); ctx.ellipse(56,54,22.5,25,0,0,TAU); ctx.fill();
+    // چین‌های روسری
+    ctx.strokeStyle=shade(sc,-26); ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(56,50,33,Math.PI*1.15,Math.PI*1.55); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(30,62); ctx.quadraticCurveTo(26,74,32,86); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(82,62); ctx.quadraticCurveTo(86,74,80,86); ctx.stroke();
+    // خط مو روی پیشانی
+    ctx.fillStyle=hair; ctx.beginPath(); ctx.ellipse(56,36,17,7,0,Math.PI,TAU); ctx.fill();
+  }
+
+  /* گوشوارهٔ زنان */
+  if(P.female&&hat!=='scarf'){ ctx.fillStyle='#e8b84b';
+    ctx.beginPath(); ctx.arc(30,60,2.6,0,TAU); ctx.fill(); ctx.beginPath(); ctx.arc(82,60,2.6,0,TAU); ctx.fill(); }
+  else if(P.female){ ctx.fillStyle='#e8b84b';
+    ctx.beginPath(); ctx.arc(31,66,2.4,0,TAU); ctx.fill(); ctx.beginPath(); ctx.arc(81,66,2.4,0,TAU); ctx.fill(); }
+
+  /* وینیت و قاب تزئینی */
+  const vin=ctx.createRadialGradient(56,56,34,56,56,74);
+  vin.addColorStop(0,'rgba(0,0,0,0)'); vin.addColorStop(1,'rgba(0,0,0,.30)');
+  ctx.fillStyle=vin; ctx.fillRect(0,0,112,112);
+  ctx.strokeStyle='rgba(232,184,75,.65)'; ctx.lineWidth=2.4;
+  ctx.beginPath(); ctx.roundRect(3,3,106,106,14); ctx.stroke();
+  ctx.strokeStyle='rgba(232,184,75,.25)'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.roundRect(6.5,6.5,99,99,11); ctx.stroke();
+  // نگین‌های گوشه
+  ctx.fillStyle='rgba(232,184,75,.9)';
+  for(const [cx,cy] of [[8,8],[104,8],[8,104],[104,104]]){
+    ctx.beginPath(); ctx.arc(cx,cy,2.2,0,TAU); ctx.fill();
+  }
   ctx.restore();
 };
 

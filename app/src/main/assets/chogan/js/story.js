@@ -7,7 +7,7 @@ CH.story=S;
 S.player={x:340,y:640,ang:0,gallop:0,speed:0,swing:0,swingHit:false,vx:0,vy:0};
 S.cam={x:340,y:640};
 
-/* ---------- NPC ها ---------- */
+/* ---------- NPC ها (from = از کدام فصل در نقشه دیده می‌شود) ---------- */
 S.npcs=[
   {id:'grand',x:300,y:452,look:{head:'turban',robe:'#7a5a3e',hat:'#8a6a4a',skin:'#e0b088',hair:'#555',beard:'#dcdcdc'}},
   {id:'mother',x:225,y:812,look:{head:'scarf',robe:'#8a4a5a',hat:'#8a3a4a',skin:'#f0c098',hair:'#241608',female:true}},
@@ -15,11 +15,16 @@ S.npcs=[
   {id:'tahmineh',x:910,y:1024,look:{head:'scarf',robe:'#2e5a3c',hat:'#2e5a3c',skin:'#dca878',hair:'#1a1008',female:true}},
   {id:'villager1',x:760,y:360,look:{head:'cap',robe:'#3d7a6e',hat:'#6a5a3a',skin:'#e0b088',hair:'#241608'}},
   {id:'villager2',x:390,y:950,look:{head:'turban',robe:'#7a6a4a',hat:'#6a5a3a',skin:'#d8a878',hair:'#241608',beard:'#333'}},
-  {id:'khosrow',x:1955,y:545,look:{head:'turban',robe:'#3a4a6a',hat:'#3a4a6a',skin:'#d8a878',hair:'#333',beard:'#4a4a4a'}},
-  {id:'golnar',x:2140,y:660,look:{head:'scarf',robe:'#b8862a',hat:'#b8862a',skin:'#f0c098',hair:'#2a1a0c',female:true}},
-  {id:'sassan',x:2040,y:760,look:{head:'cap',robe:'#2a2a3e',hat:'#1c1c28',skin:'#e8c0a0',hair:'#101018'}},
-  {id:'guard',x:1560,y:830,look:{head:'turban',robe:'#3d6e8a',hat:'#2a4a5e',skin:'#d8a878',hair:'#241608',beard:'#241a10'}},
+  {id:'kid',x:625,y:600,look:{head:'cap',robe:'#3d8a7a',hat:'#2a7a6a',skin:'#f0c098',hair:'#241608'}},
+  {id:'khosrow',x:1955,y:545,look:{head:'turban',robe:'#3a4a6a',hat:'#3a4a6a',skin:'#d8a878',hair:'#333',beard:'#4a4a4a'},from:4},
+  {id:'golnar',x:2140,y:660,look:{head:'scarf',robe:'#b8862a',hat:'#b8862a',skin:'#f0c098',hair:'#2a1a0c',female:true},from:4},
+  {id:'sassan',x:2040,y:760,look:{head:'cap',robe:'#2a2a3e',hat:'#1c1c28',skin:'#e8c0a0',hair:'#101018'},from:4},
+  {id:'farhad',x:2280,y:700,look:{head:'cap',robe:'#5a4a8a',hat:'#4a3a6a',skin:'#e0b088',hair:'#1a1410'},from:4},
+  {id:'guard',x:1560,y:830,look:{head:'turban',robe:'#3d6e8a',hat:'#2a4a5e',skin:'#d8a878',hair:'#241608',beard:'#241a10'},from:4},
+  {id:'vendor',x:2160,y:1250,look:{head:'hat',robe:'#a03a3a',hat:'#8a5a2a',skin:'#eab98c',hair:'#241608',beard:'#241a10'},from:4},
+  {id:'baghban',x:2745,y:455,look:{head:'turban',robe:'#3e5a34',hat:'#4a6a3a',skin:'#d8a878',hair:'#8a8a8a',beard:'#cfcfcf'},from:2},
 ];
+S.npcVisible=function(n){ const st=CH.save.d.story; return st.done||st.ch>=(n.from||0); };
 S.hay=[]; // یونجه‌های مأموریت
 S.practice=null; // تمرین فعال
 
@@ -67,20 +72,21 @@ S.applyStep=function(){
   switch(step.type){
     case 'dialog':
       S.setObj('…');
-      setTimeout(()=>S.say(step.lines,()=>{
-        if(step.after==='finish')S.finishStory();
-        else S.nextStep();
-      }),420);
+      setTimeout(()=>{
+        if(!S.active||CH.scenes.name!=='story')return; // اگر از بازی خارج شدیم دیالوگ باز نشود
+        S.say(step.lines,()=>{
+          if(step.after==='finish')S.finishStory();
+          else S.nextStep();
+        });
+      },420);
       break;
     case 'talk':
       S.setObj(step.obj);
       break;
     case 'collect':
       S.setObj(step.obj);
-      S.hay=[
-        {x:690,y:1180,got:false},{x:1010,y:1260,got:false},{x:560,y:1330,got:false}
-      ];
-      CH.toast('یونجه‌ها را در دشت پایین دهکده پیدا کن!');
+      S.hay=(step.at||[[690,1180],[1010,1260],[560,1330]]).map(p=>({x:p[0],y:p[1],got:false,kind:step.item||'hay'}));
+      CH.toast(step.toast||'یونجه‌ها را در دشت پایین دهکده پیدا کن!');
       break;
     case 'targets':
       S.setObj(step.obj);
@@ -165,7 +171,8 @@ S.updatePractice=function(dt){
   if(P.time>0){
     P.elapsed+=dt;
     const left=P.time-P.elapsed;
-    S.setObj('در '+U.toFa(Math.ceil(Math.max(0,left)))+' ثانیه '+U.toFa(P.n)+' گل بزن ('+U.toFa(P.count)+')');
+    const what=P.mode==='goal'?'گل بزن':'حلقه رد کن';
+    S.setObj('در '+U.toFa(Math.ceil(Math.max(0,left)))+' ثانیه '+U.toFa(P.n)+' '+what+' ('+U.toFa(P.count)+')');
     if(left<=0&&P.count<P.n){ P.failed=true; S.failPractice(); return; }
   }
   // فیزیک توپ تمرین
@@ -280,11 +287,17 @@ S.update=function(dt){
   if(P.swing>0){ P.swing+=dt/0.3; if(P.swing>=1)P.swing=0; }
   // تمرین
   S.updatePractice(dt);
-  // چالش دروازهٔ شهر (مرحلهٔ reach)
+  // مرحلهٔ reach (دروازهٔ شهر / رسیدن به بادبه)
   const qq=CH.QUESTS[s.story.ch], stp=qq&&qq.steps[s.story.step];
   if(stp&&stp.type==='reach'){
     const gd=U.dist(P.x,P.y,stp.x,stp.y);
-    if(gd<(stp.r||120)){ if(!S._inGate){ S._inGate=true; S.gateChallenge(); } }
+    if(gd<(stp.r||120)){
+      if(!S._inGate){
+        S._inGate=true;
+        if(stp.gate)S.gateChallenge();
+        else if(stp.lines)S.say(stp.lines,()=>S.nextStep());
+      }
+    }
     else S._inGate=false;
   }
   // دوربین
@@ -299,10 +312,17 @@ S.update=function(dt){
   S.refreshBtn();
 };
 
+/* ---------- پاک‌سازی هنگام خروج به منو ---------- */
+S.abortAll=function(){
+  S.clearPractice();
+  S.pendingMatch=null;
+  S._inGate=false;
+};
+
 /* ---------- چالش نگهبان دروازه ---------- */
 S.gateChallenge=function(){
   CH.audio.play('click');
-  S.say(CH_STORY_DATA.ch4_gate,()=>{
+  S.say(CH_STORY_DATA.ch5_gate,()=>{
     const c=CH.ui.lastChoice();
     const ok=!!(c&&c.ok);
     CH.ui.clearChoice();
@@ -317,13 +337,12 @@ S.gateChallenge=function(){
   });
 };
 
-/* ---------- متن دکمهٔ اقدام ---------- */
+/* ---------- متن دکمهٔ اقدام (هرگز «ضربه» نمی‌شود — ضربه فقط دکمهٔ نارنجی) ---------- */
 S.refreshBtn=function(){
   let lbl='صحبت';
   const s=CH.save.d;
   const q=CH.QUESTS[s.story.ch], step=q&&q.steps[s.story.step];
-  if(S.practice) lbl='ضربه';
-  else if(step&&step.type==='match'&&U.dist(S.player.x,S.player.y,540,1120)<130) lbl='مسابقه';
+  if(step&&step.type==='match'&&U.dist(S.player.x,S.player.y,540,1120)<130) lbl='مسابقه';
   else { const t=S.nearest(); if(t) lbl=(t.type==='hay')?'برداشتن':'صحبت'; }
   if(lbl!==S._lbl){ S._lbl=lbl; CH.ui.setBtnA(lbl); }
 };
@@ -340,13 +359,17 @@ S.markerTarget=function(){
     default: return null;
   }
 };
+S.collectDone=function(step){
+  const left=S.hay.filter(h=>!h.got).length;
+  if(left>0){ CH.toast((step.item==='track'?'رد نعل':'یونجه')+' برداشته شد! '+U.toFa(left)+' تای دیگر مانده'); }
+  else { CH.toast(step.item==='track'?'همهٔ ردها پیدا شد — بادبه همان‌جای نزدیکی است!':'همهٔ یونجه‌ها آماده است — ببر پیش تهمینه!'); S.nextStep(); }
+};
 
 /* ---------- تعامل ---------- */
 S.nearest=function(){
   const P=S.player; let best=null,bd=95;
-  const done=CH.save.d.story.done;
   for(const n of S.npcs){
-    if((n.id==='sassan'||n.id==='guard')&&!(CH.save.d.story.ch>=3||done))continue;
+    if(!S.npcVisible(n))continue;
     const d=U.dist(P.x,P.y,n.x,n.y);
     if(d<bd){bd=d;best={type:'npc',ref:n};}
   }
@@ -368,10 +391,8 @@ S.interact=function(){
   const t=S.nearest(); if(!t)return;
   if(t.type==='hay'){
     t.ref.got=true;
-    CH.audio.play('coin'); CH.fx.burst(t.ref.x,t.ref.y,'#d8b860',12);
-    const left=S.hay.filter(h=>!h.got).length;
-    if(left>0)CH.toast('یونجه برداشته شد! '+U.toFa(left)+' تای دیگر مانده');
-    else { CH.toast('همهٔ یونجه‌ها آماده است — ببر پیش تهمینه!'); S.nextStep(); }
+    CH.audio.play('coin'); CH.fx.burst(t.ref.x,t.ref.y,t.ref.kind==='track'?'#c9b08a':'#d8b860',12);
+    S.collectDone(step&&step.type==='collect'?step:{item:t.ref.kind});
     return;
   }
   const n=t.ref;
@@ -401,6 +422,7 @@ S.startPendingMatch=function(){
   CH.confirm('زمین چوگان آماده است!',pm.cfg.title+' — آماده‌ای؟',()=>{
     CH.match.start(Object.assign({},pm.cfg,{
       context:'story',
+      tag:pm.tag,          // برچسب مسابقه برای انتخاب دیالوگ پیروزی
       reward:pm.reward,
       onEnd:(res)=>{ S.storyMatchEnd(res); }
     }));
@@ -408,20 +430,22 @@ S.startPendingMatch=function(){
 };
 
 S.storyMatchEnd=function(res){
-  const st=CH.save.d.story;
-  const cfg=res.cfg||{};
-  const rw=cfg.reward||{};
+  const SD=CH_STORY_DATA;
+  const tag=(res.cfg||{}).tag;
+  const rw=(res.cfg||{}).reward||{};
   if(res.win){
     CH.save.d.coins+=rw.coins||0;
     if(rw.gems)CH.save.d.gems+=rw.gems;
     CH.save.write(); CH.ui.refreshCoins();
     CH.audio.play('quest');
-    if(st.ch===2)S.say(CH_STORY_DATA.ch3_win,()=>S.nextStep());
-    else if(st.ch===3)S.say(CH_STORY_DATA.ch4_duel_win,()=>S.nextStep());
-    else if(st.ch===4)S.say(CH_STORY_DATA.ch5_win,()=>S.nextStep());
+    /* دیالوگ پیروزی فقط یک‌بار اینجا پخش می‌شود (رفع باگ تکرار) */
+    if(tag==='village')S.say(SD.ch4_win,()=>S.nextStep());
+    else if(tag==='duel')S.say(SD.ch5_duel_win,()=>S.nextStep());
+    else if(tag==='trial')S.say(SD.ch6_after,()=>S.nextStep());
+    else if(tag==='final')S.say(SD.ch7_win,()=>S.nextStep());
     else S.nextStep();
   } else {
-    if(st.ch===4)S.say(CH_STORY_DATA.ch5_lose,()=>{});
+    if(tag==='final')S.say(SD.ch7_lose,()=>{});
     CH.toast('باختی! از نشانگر زمین، دوباره شروع کن');
   }
 };
@@ -470,18 +494,27 @@ S.render=function(ctx){
   const vy0=S.cam.y-CH.view.h/2-80, vy1=S.cam.y+CH.view.h/2+80;
   const vis=(x,y)=>x>vx0&&x<vx1&&y>vy0&&y<vy1;
 
-  // یونجه
+  // یونجه / ردِ نعل
   for(const h of S.hay){
     if(h.got||!vis(h.x,h.y))continue;
-    ctx.fillStyle='#d8b860';
-    ctx.save(); ctx.translate(h.x,h.y);
-    ctx.rotate(Math.sin(t*2+h.x)*0.08);
-    ctx.beginPath(); ctx.ellipse(0,0,16,11,0.3,0,TAU); ctx.fill();
-    ctx.strokeStyle='rgba(140,100,30,.7)'; ctx.lineWidth=2; ctx.stroke();
-    ctx.restore();
     const pu=(Math.sin(t*4)+1)/2;
     ctx.strokeStyle='rgba(232,184,75,'+(0.4+pu*0.4).toFixed(2)+')'; ctx.lineWidth=2.5;
     ctx.beginPath(); ctx.arc(h.x,h.y,26+pu*5,0,TAU); ctx.stroke();
+    ctx.save(); ctx.translate(h.x,h.y); ctx.rotate(Math.sin(t*2+h.x)*0.08);
+    if(h.kind==='track'){
+      // رد نعل اسب
+      ctx.fillStyle='#8a6a44';
+      ctx.beginPath(); ctx.ellipse(0,0,13,9,0.3,0,TAU); ctx.fill();
+      ctx.fillStyle='#5a4630';
+      ctx.beginPath(); ctx.ellipse(0,1,7,5,0.3,0,TAU); ctx.fill();
+      ctx.fillStyle='#8a6a44';
+      for(const fp of [[-8,-6],[8,-6],[-8,7],[8,7]]){ ctx.beginPath(); ctx.ellipse(fp[0],fp[1],2.6,1.8,0.3,0,TAU); ctx.fill(); }
+    } else {
+      ctx.fillStyle='#d8b860';
+      ctx.beginPath(); ctx.ellipse(0,0,16,11,0.3,0,TAU); ctx.fill();
+      ctx.strokeStyle='rgba(140,100,30,.7)'; ctx.lineWidth=2; ctx.stroke();
+    }
+    ctx.restore();
   }
 
   // تمرین: حلقه‌ها و توپ و دروازه
@@ -532,9 +565,8 @@ S.render=function(ctx){
   }
 
   // NPC ها
-  const done=CH.save.d.story.done;
   for(const n of S.npcs){
-    if((n.id==='sassan'||n.id==='guard')&&!(CH.save.d.story.ch>=3||done))continue;
+    if(!S.npcVisible(n))continue;
     if(!vis(n.x,n.y))continue;
     const moving=n.id==='amir'&&Math.sin(t*0.7+n.x)>0.3;
     const px=n.x+(moving?Math.sin(t*0.5)*46:0);
@@ -550,7 +582,11 @@ S.render=function(ctx){
     }
   }
 
-  // بازیکن
+  // بازیکن — اسبِ گم‌شده (بادبه) در مرحلهٔ reach فصل ۳ رسم می‌شود
+  const st=CH.save.d.story, qq=CH.QUESTS[st.ch], stp=qq&&qq.steps[st.step];
+  if(stp&&stp.type==='reach'&&!stp.gate&&stp.lines){
+    CH.G.horse(ctx,stp.x,stp.y-18,-Math.PI/2,t,{coat:'#7a5233',bard:'#8a7a5a',mane:'#3c2717'});
+  }
   const P=S.player;
   if(CH.save.d.story.hasHorse){
     const h=CH.SHOP.horses.find(h=>h.id===CH.save.d.equipped.horse);
@@ -592,14 +628,14 @@ S.render=function(ctx){
   }
 };
 
-/* ---------- رویداد ضربه ---------- */
+/* ---------- رویداد دکمه‌ها ----------
+   دکمهٔ آبی (صحبت/برداشتن/مسابقه) هرگز ضربه نمی‌زند */
 CH.input.on('a',()=>{
   if(!S.active||CH.scenes.name!=='story')return;
   if(CH.ui.isDialogOpen()||CH.storyPaused)return;
   S.interact();
-  S.trySwing();
 });
-/* دکمهٔ نارنجی = ضربه با چوب چوگان */
+/* دکمهٔ نارنجی «ضربه» = فقط ضربه با چوب چوگان */
 CH.input.on('b',()=>{
   if(!S.active||CH.scenes.name!=='story')return;
   if(CH.ui.isDialogOpen()||CH.storyPaused)return;

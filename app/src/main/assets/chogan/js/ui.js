@@ -65,7 +65,7 @@ function renderLine(line){
   else { nameEl.textContent=(line.s==='me'?(CH.save.d.name||'آرش'):ch.name); nameEl.classList.remove('narr'); }
   // پرتره
   if(line.s==='narr'||line.s==='sys'){ faceCv.parentElement.style.visibility='hidden'; }
-  else { faceCv.parentElement.style.visibility='visible'; CH.G.portrait(faceCv.getContext('2d'),line.s==='me'?'me':line.s,112); }
+  else { faceCv.parentElement.style.visibility='visible'; CH.G.portrait(faceCv.getContext('2d'),line.s==='me'?'me':line.s,224); }
   // متن با افکت تایپ
   const text=(line.t||'').replace(/\{name\}/g,CH.save.d.name||'آرش');
   textEl.textContent='';
@@ -473,12 +473,23 @@ UI.bind=function(){
   $('btn-quit').onclick=()=>{
     CH.audio.play('click'); UI.hideModal('scr-pause');
     CH.match.stop(); CH.storyPaused=false;
+    if(CH.story&&CH.story.abortAll)CH.story.abortAll();
     UI.forceCloseDialog();
     UI.hideModal('confirm-modal');
     UI.hideHud(); UI.hideAll();
     CH.input.enable(false);
     CH.scenes.set('menu');
   };
+
+  // لینک کانال روبیکا (در اندروید از پل استفاده کن)
+  const rb=document.getElementById('rubika-link');
+  if(rb)rb.addEventListener('click',(e)=>{
+    if(CH.isAndroid&&CH.bridge&&CH.bridge.openUrl){
+      e.preventDefault();
+      try{ CH.bridge.openUrl('https://rubika.ir/Amirhosin_studio'); }catch(err){ window.open('https://rubika.ir/Amirhosin_studio','_blank'); }
+    }
+    CH.audio.play('click');
+  });
 
   // تبلیغ جایزه‌دار
   $('ad-reward').onclick=()=>{ UI.adGrant(); };
