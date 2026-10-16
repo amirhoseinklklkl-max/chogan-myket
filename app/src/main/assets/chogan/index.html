@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0d1b2e">
+<meta name="mobile-web-app-capable" content="yes">
+<title>چوگان: میراث پارس</title>
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<!-- پرتره‌ها و آواتار -->
+<div id="rotate-overlay">
+  <div class="rot-phone"></div>
+  <div class="rot-txt">گوشی را افقی بچرخانید</div>
+</div>
+
+<!-- صفحه بارگذاری -->
+<div id="scr-boot" class="screen">
+  <div class="boot-emblem"><canvas id="boot-cv" width="180" height="180"></canvas></div>
+  <div class="boot-title">چوگان</div>
+  <div class="boot-sub">میراث پارس</div>
+  <div class="boot-load">در حال آماده‌سازی میدان…</div>
+</div>
+
+<!-- منوی اصلی -->
+<div id="scr-menu" class="screen hidden">
+  <div class="menu-right">
+    <div class="game-logo">
+      <div class="logo-ornament">✦ ✦ ✦</div>
+      <h1 class="logo-title">چوگان</h1>
+      <div class="logo-sub">میراث پارس</div>
+    </div>
+    <nav class="menu-nav">
+      <button class="mbtn primary" id="btn-story"><span class="mi">🏇</span><span>بخش داستانی</span><em id="story-state">شروع ماجرا</em></button>
+      <button class="mbtn" id="btn-arcade"><span class="mi">🏆</span><span>بازی مرحله‌ای</span><em>۸ مرحله</em></button>
+      <button class="mbtn" id="btn-shop"><span class="mi">🛍️</span><span>فروشگاه کاروان</span><em>چوب، اسب، جامه</em></button>
+      <button class="mbtn" id="btn-settings"><span class="mi">⚙️</span><span>تنظیمات</span><em>گرافیک و صدا</em></button>
+      <button class="mbtn" id="btn-about"><span class="mi">📜</span><span>درباره ما</span><em>راهنما و تاریخچه</em></button>
+    </nav>
+    <div class="menu-wallet">
+      <div class="pill"><span class="coin-dot gold"></span><b id="menu-coins">۰</b></div>
+      <div class="pill"><span class="coin-dot gem"></span><b id="menu-gems">۰</b></div>
+    </div>
+    <div class="menu-foot">نسخه ۱.۰.۰ — ساخته‌شده با افتخار برای میراث ایرانی</div>
+  </div>
+</div>
+
+<!-- تنظیمات -->
+<div id="scr-settings" class="screen hidden">
+  <div class="panel">
+    <div class="panel-head"><h2>تنظیمات</h2><button class="xbtn" data-close>✕</button></div>
+    <div class="panel-body">
+      <div class="set-group">
+        <label>کیفیت گرافیک</label>
+        <div class="seg" id="seg-gfx">
+          <button data-v="low">ضعیف</button><button data-v="medium">متوسط</button><button data-v="high">قوی</button>
+        </div>
+        <p class="hint">روی گوشی‌های ضعیف «ضعیف» را انتخاب کنید تا بازی روان بماند.</p>
+      </div>
+      <div class="set-group">
+        <label>بلندی موسیقی</label>
+        <input type="range" id="rng-music" min="0" max="100" value="65">
+      </div>
+      <div class="set-group">
+        <label>بلندی جلوه‌های صوتی</label>
+        <input type="range" id="rng-sfx" min="0" max="100" value="80">
+      </div>
+      <div class="set-group row">
+        <label>لرزش گوشی</label>
+        <div class="seg" id="seg-vib"><button data-v="1">روشن</button><button data-v="0">خاموش</button></div>
+      </div>
+      <div class="set-group row">
+        <label>جای جوی‌استیک (برای چپ‌دست‌ها)</label>
+        <div class="seg" id="seg-joy"><button data-v="left">چپ</button><button data-v="right">راست</button></div>
+      </div>
+      <div class="set-group">
+        <button class="danger-btn" id="btn-reset">پاک کردن پیشرفت بازی</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- درباره ما -->
+<div id="scr-about" class="screen hidden">
+  <div class="panel wide">
+    <div class="panel-head"><h2>درباره ما</h2><button class="xbtn" data-close>✕</button></div>
+    <div class="tabs" id="about-tabs">
+      <button data-tab="guide" class="on">راهنمای بازی</button>
+      <button data-tab="hist">چوگان چیست؟</button>
+      <button data-tab="maker">سازنده</button>
+    </div>
+    <div class="panel-body scrollable" id="about-body">
+      <div class="tab-page" data-page="guide">
+        <h3>🎮 کنترل‌ها</h3>
+        <ul class="guide-list">
+          <li><b>حرکت:</b> اهرم مجازی پایین صفحه (یا کلیدهای جهت‌دار / WASD در کامپیوتر)</li>
+          <li><b>دکمه آبی «ضربه»:</b> در مسابقه توپ را می‌زند؛ در داستان با آدم‌ها صحبت می‌کند و اشیاء را بررسی می‌کند</li>
+          <li><b>دکمه نارنجی «تندرو»:</b> اسب را به تاخت می‌اندازد (کمی از استقامت کم می‌کند)</li>
+          <li><b>دیالوگ‌ها:</b> برای رفتن به جمله بعدی روی متن بزن؛ گاهی دو انتخاب داری!</li>
+        </ul>
+        <h3>🏇 قوانین مسابقه چوگان</h3>
+        <ul class="guide-list">
+          <li>توپ را با چوب بزن و بین دو پرچم دروازه حریف جای بده</li>
+          <li>همیشه نزدیک‌ترین یارِ تو به توپ کنترل دستی می‌شود (حلقه طلایی زیرش دیده می‌شود)</li>
+          <li>وقتی نزدیک توپ هستی و حرکت می‌کنی، توپ کمی جلوی اسب می‌ماند؛ برای شوت از پشت توپ بزن</li>
+          <li>هرچه دقت چوب بیشتر باشد، شوت‌ها اصلاح‌تر و کوبنده‌ترند</li>
+        </ul>
+        <h3>📖 بخش داستانی</h3>
+        <ul class="guide-list">
+          <li>داستان پسرکی دهکده‌ای است که رؤیای چوگان دارد؛ اولین بار اسم خودت را به عنوان قهرمان وارد می‌کنی</li>
+          <li>جهت ادامه داستان، نشانگر طلایی و فلش لبه صفحه را دنبال کن</li>
+          <li>مأموریت‌ها: گفتگو، جمع‌آوری، تمرین حلقه‌ها و مسابقه‌های واقعی چوگان</li>
+          <li>پیشرفت داستان، سکه‌ها و خریدها به صورت خودکار ذخیره می‌شود</li>
+        </ul>
+        <h3>🛍️ فروشگاه</h3>
+        <ul class="guide-list">
+          <li>چوب و اسب بهتر = سرعت، استقامت و دقت بیشتر</li>
+          <li>سکه از مسابقه‌ها و مأموریت‌ها به دست می‌آید؛ الماس گران‌بها مخصوص آیتم‌های ویژه است</li>
+        </ul>
+      </div>
+      <div class="tab-page hidden" data-page="hist">
+        <h3>چوگان؛ کهن‌ترین ورزش سوارکاری جهان</h3>
+        <p>چوگان ورودی پهلوانی و درباری است که ریشه در ایران باستان دارد و تاریخش به دوران هخامنشیان، حدود ۲٬۵۰۰ سال پیش می‌رسد. نخست برای آمادگی سواره‌نظام و سپس به شکل یک ورزش درباری محبوب بازی می‌شد؛ از دربار کوروش تا میدان‌های سلطنتی صفوی.</p>
+        <p>شاعران فارسی بارها از چوگان و چوگان‌بازان یاد کرده‌اند و میدان چوگان (چوگان‌خانه) بخشی جداناپذیر از شهرهای ایرانی بوده است. این ورزش سپس از ایران به دیگر سرزمین‌ها رفت و امروز در جهان با نام Polo شناخته می‌شود.</p>
+        <p>در سال ۲۰۱۶ میلادی، «چوگان سوارکاری» در فهرست میراث فرهنگی ناملموس یونسکو به ثبت رسید. این بازی، میراثی زنده از هنر، شجاعت و آداب ایرانی است.</p>
+        <p class="quote">«چوگان زدن، هنر پارس‌هاست؛ زیبایی، شتاب و بی‌نظمیِ اسب‌هایش هر بیننده‌ای را شیفته می‌کند.»</p>
+        <h3>شعار این بازی</h3>
+        <p>بازی «چوگان: میراث پارس» با عشق به این میراث کهن ساخته شده تا نسل جدید، بوی میدان چوگان را دوباره استشمام کند.</p>
+      </div>
+      <div class="tab-page hidden" data-page="maker">
+        <div class="maker-card">
+          <div class="maker-avatar">؟</div>
+          <h3>سازنده بازی</h3>
+          <p class="hint">این بخش بعداً با اطلاعات شما تکمیل می‌شود — نام، شبکه‌های اجتماعی، ایمیل پشتیبانی و پیام سازنده را بفرستید تا اینجا قرار گیرد.</p>
+          <div class="maker-rows">
+            <div class="mrow"><span>نام سازنده:</span><b>—</b></div>
+            <div class="mrow"><span>ایمیل / پشتیبانی:</span><b>—</b></div>
+            <div class="mrow"><span>اینستاگرام / تلگرام:</span><b>—</b></div>
+            <div class="mrow"><span>پیام سازنده:</span><b>«…»</b></div>
+          </div>
+        </div>
+        <div class="maker-card">
+          <h3>اعتبارها</h3>
+          <ul class="guide-list">
+            <li>طراحی و برنامه‌نویسی بازی — چوگان استودیو</li>
+            <li>گرافیک دوبعدی و انیمیشن — چوگان استودیو</li>
+            <li>صدای شخصیت‌ها — در انتظار گویندگان شما!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- فروشگاه -->
+<div id="scr-shop" class="screen hidden">
+  <div class="panel wide">
+    <div class="panel-head">
+      <h2>فروشگاه کاروان</h2>
+      <div class="wallet">
+        <div class="pill"><span class="coin-dot gold"></span><b id="shop-coins">۰</b></div>
+        <div class="pill"><span class="coin-dot gem"></span><b id="shop-gems">۰</b></div>
+        <button class="xbtn" data-close>✕</button>
+      </div>
+    </div>
+    <div class="tabs" id="shop-tabs">
+      <button data-tab="mallets" class="on">چوب چوگان</button>
+      <button data-tab="horses">اسب‌ها</button>
+      <button data-tab="outfits">جامه‌ها</button>
+      <button data-tab="iap" class="iap-tab">خرید الماس ⚡</button>
+    </div>
+    <div class="panel-body scrollable"><div id="shop-grid" class="shop-grid"></div></div>
+  </div>
+</div>
+
+<!-- انتخاب مرحله -->
+<div id="scr-levels" class="screen hidden">
+  <div class="panel wide">
+    <div class="panel-head"><h2>بازی مرحله‌ای</h2><button class="xbtn" data-close>✕</button></div>
+    <div class="panel-body scrollable"><div id="levels-grid" class="levels-grid"></div></div>
+  </div>
+</div>
+
+<!-- HUD داستان -->
+<div id="hud-story" class="hud hidden">
+  <div class="obj-bar" id="obj-bar"><span class="obj-ic">🎯</span><span id="obj-text">…</span></div>
+  <div class="joy-zone" id="joy-zone"><div class="joy-base hidden" id="joy-base"><div class="joy-thumb" id="joy-thumb"></div></div></div>
+  <div class="btns-zone">
+    <div class="act-btn b" id="btn-b"><span>تندرو</span></div>
+    <div class="act-btn a" id="btn-a"><span id="btn-a-label">صحبت</span></div>
+  </div>
+</div>
+
+<!-- دیالوگ -->
+<div id="dlg" class="hidden">
+  <div class="dlg-box">
+    <div class="dlg-portrait"><canvas id="dlg-face" width="112" height="112"></canvas></div>
+    <div class="dlg-main">
+      <div class="dlg-name" id="dlg-name">—</div>
+      <div class="dlg-text" id="dlg-text"></div>
+      <div class="dlg-next" id="dlg-next">▼</div>
+    </div>
+  </div>
+  <div class="dlg-choices hidden" id="dlg-choices"></div>
+</div>
+
+<!-- کارت فصل -->
+<div id="chapter-card" class="hidden"><div class="cc-orn">✦</div><div class="cc-ch" id="cc-ch">فصل ۱</div><div class="cc-title" id="cc-title">رویای چوگان</div><div class="cc-orn">✦</div></div>
+
+<!-- مودال اسم -->
+<div id="name-modal" class="modal hidden">
+  <div class="modal-box">
+    <h3>اسم قهرمان داستان چیست؟</h3>
+    <p class="hint">این اسم روی چوگان‌باز جوان گذاشته می‌شود — اسم خودت را بنویس!</p>
+    <input type="text" id="name-input" maxlength="14" placeholder="مثلاً: آرش" autocomplete="off">
+    <div class="modal-btns">
+      <button class="mbtn small primary" id="name-ok">ثبت نام</button>
+    </div>
+  </div>
+</div>
+
+<!-- HUD مسابقه -->
+<div id="hud-match" class="hud hidden">
+  <div class="match-top">
+    <div class="team-chip" id="mt-b"><span class="tc-dot" id="mt-b-dot"></span><b id="mt-b-name">حریف</b><b class="score" id="mt-b-score">۰</b></div>
+    <div class="match-mid"><div id="mt-timer">۰:۰۰</div><div class="mt-env" id="mt-env">زمین دهکده</div></div>
+    <div class="team-chip flip" id="mt-a"><span class="tc-dot" id="mt-a-dot"></span><b id="mt-a-name">تو</b><b class="score" id="mt-a-score">۰</b></div>
+    <button class="pause-btn" id="btn-pause">⏸</button>
+  </div>
+  <div class="joy-zone" id="joy-zone2"><div class="joy-base hidden" id="joy-base2"><div class="joy-thumb" id="joy-thumb2"></div></div></div>
+  <div class="btns-zone">
+    <div class="stam"><div class="stam-fill" id="stam-fill"></div></div>
+    <div class="act-btn b" id="btn-b2"><span>تاخت</span></div>
+    <div class="act-btn a" id="btn-a2"><span>ضربه</span></div>
+  </div>
+</div>
+
+<!-- توقف -->
+<div id="scr-pause" class="modal hidden">
+  <div class="modal-box">
+    <h3 id="pause-title">توقف بازی</h3>
+    <div class="modal-btns col">
+      <button class="mbtn small primary" id="btn-resume">ادامه بازی</button>
+      <button class="mbtn small" id="btn-restart">شروع دوباره</button>
+      <button class="mbtn small" id="btn-quit">خروج به منو</button>
+    </div>
+  </div>
+</div>
+
+<!-- نتیجه مسابقه -->
+<div id="scr-result" class="screen hidden">
+  <div class="result-box">
+    <div class="res-title" id="res-title">پیروزی!</div>
+    <div class="res-score" id="res-score">۳ — ۱</div>
+    <div class="res-stars" id="res-stars">★ ★ ★</div>
+    <div class="res-reward" id="res-reward">+۱۵۰ سکه</div>
+    <button class="mbtn primary" id="res-ok">ادامه</button>
+  </div>
+</div>
+
+<!-- اعلان بزرگ (گل و ...) -->
+<div id="big-note" class="hidden"></div>
+<div id="toast"></div>
+
+<!-- مودال عمومی -->
+<div id="confirm-modal" class="modal hidden">
+  <div class="modal-box">
+    <h3 id="confirm-title">مطمئنی؟</h3>
+    <p class="hint" id="confirm-text"></p>
+    <div class="modal-btns">
+      <button class="mbtn small" id="confirm-no">نه، بی‌خیال</button>
+      <button class="mbtn small primary" id="confirm-yes">آره</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/audio-files.js"></script>
+<script src="js/util.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/input.js"></script>
+<script src="js/gfx.js"></script>
+<script src="js/world.js"></script>
+<script src="js/story-data.js"></script>
+<script src="js/match.js"></script>
+<script src="js/story.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
