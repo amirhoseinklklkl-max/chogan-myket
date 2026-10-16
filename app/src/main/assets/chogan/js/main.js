@@ -7,6 +7,11 @@ CH.scenes.def.menu={
   enter(){
     CH.ui.show('scr-menu');
     CH.ui.hideHud();
+    CH.ui.forceCloseDialog();
+    CH.ui.hideModal('confirm-modal');
+    CH.ui.hideModal('name-modal');
+    CH.ui.hideModal('ad-modal');
+    CH.ui.hideModal('scr-pause');
     CH.input.enable(false);
     CH.ui.refreshCoins();
     CH.ui.updateStoryBtn();
@@ -25,7 +30,7 @@ CH.scenes.def.story={
     CH.audio.music(true);
   },
   exit(){ CH.story.active=false; CH.audio.gallop(false); },
-  update(dt){ CH.story.update(dt); },
+  update(dt){ if(!CH.storyPaused)CH.story.update(dt); },
   render(ctx){ if(CH.story.active)CH.story.render(ctx); }
 };
 
@@ -72,8 +77,11 @@ function boot(){
   }
   requestAnimationFrame(loop);
 
-  // ورود به منو بعد از لود فونت
+  // ورود به منو بعد از لود فونت (فقط یک‌بار!)
+  let _bootDone=false;
   const toMenu=()=>{
+    if(_bootDone)return;
+    _bootDone=true;
     document.getElementById('scr-boot').classList.add('hidden');
     CH.scenes.set('menu');
   };

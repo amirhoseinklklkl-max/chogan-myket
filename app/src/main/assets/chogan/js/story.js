@@ -18,6 +18,7 @@ S.npcs=[
   {id:'khosrow',x:1955,y:545,look:{head:'turban',robe:'#3a4a6a',hat:'#3a4a6a',skin:'#d8a878',hair:'#333',beard:'#4a4a4a'}},
   {id:'golnar',x:2140,y:660,look:{head:'scarf',robe:'#b8862a',hat:'#b8862a',skin:'#f0c098',hair:'#2a1a0c',female:true}},
   {id:'sassan',x:2040,y:760,look:{head:'cap',robe:'#2a2a3e',hat:'#1c1c28',skin:'#e8c0a0',hair:'#101018'}},
+  {id:'guard',x:1560,y:830,look:{head:'turban',robe:'#3d6e8a',hat:'#2a4a5e',skin:'#d8a878',hair:'#241608',beard:'#241a10'}},
 ];
 S.hay=[]; // یونجه‌های مأموریت
 S.practice=null; // تمرین فعال
@@ -31,7 +32,7 @@ S.sceneStart=function(){
   S.active=true;
   const s=CH.save.d;
   CH.ui.showHud('hud-story');
-  CH.ui.setBtnA('صحبت');
+  S._lbl=null; CH.ui.setBtnA('صحبت'); S._lbl='صحبت';
   CH.input.enable(true);
   CH.input.refreshSide();
   if(!s.name){ CH.ui.nameModal(()=>{ s.name=CH.ui.tempName||'آرش'; CH.save.write(); S.beginQuestFlow(); }); }
@@ -250,10 +251,9 @@ S.say=function(lines,cb){
 S.update=function(dt){
   if(!S.active)return;
   const P=S.player, s=CH.save.d;
-  if(CH.ui.isDialogOpen()){ CH.fx.update(dt); return; }
+  if(CH.ui.isDialogOpen()||CH.storyPaused){ CH.fx.update(dt); return; }
   const mv=CH.input.move();
-  const sprint=CH.input.held.b;
-  const sp=(s.story.hasHorse?300:190)*(sprint?1.25:1);
+  const sp=s.story.hasHorse?300:190;
   P.vx=U.lerp(P.vx,mv.x*sp,1-Math.exp(-8*dt));
   P.vy=U.lerp(P.vy,mv.y*sp,1-Math.exp(-8*dt));
   P.x+=P.vx*dt; P.y+=P.vy*dt;
@@ -280,6 +280,13 @@ S.update=function(dt){
   if(P.swing>0){ P.swing+=dt/0.3; if(P.swing>=1)P.swing=0; }
   // تمرین
   S.updatePractice(dt);
+  // چالش دروازهٔ شهر (مرحلهٔ reach)
+  const qq=CH.QUESTS[s.story.ch], stp=qq&&qq.steps[s.story.step];
+  if(stp&&stp.type==='reach'){
+    const gd=U.dist(P.x,P.y,stp.x,stp.y);
+    if(gd<(stp.r||120)){ if(!S._inGate){ S._inGate=true; S.gateChallenge(); } }
+    else S._inGate=false;
+  }
   // دوربین
   S.cam.x=U.lerp(S.cam.x,P.x,1-Math.exp(-5*dt));
   S.cam.y=U.lerp(S.cam.y,P.y,1-Math.exp(-5*dt));
@@ -288,6 +295,37 @@ S.update=function(dt){
   CH.fx.update(dt);
   // نشانگر مرحله
   S.marker=S.markerTarget();
+  // متن دکمهٔ اقدام (با فضا عوض می‌شود)
+  S.refreshBtn();
+};
+
+/* ---------- چالش نگهبان دروازه ---------- */
+S.gateChallenge=function(){
+  CH.audio.play('click');
+  S.say(CH_STORY_DATA.ch4_gate,()=>{
+    const c=CH.ui.lastChoice();
+    const ok=!!(c&&c.ok);
+    CH.ui.clearChoice();
+    if(ok){
+      CH.audio.play('quest');
+      CH.fx.burst(S.player.x,S.player.y-24,'#8ff0dd',26);
+      CH.bigNote('دروازهٔ شهر باز شد!',1500);
+      S.nextStep();
+    } else {
+      CH.toast('پاسخ درست را پیدا کن و دوباره پیش نگهبان برگرد!');
+    }
+  });
+};
+
+/* ---------- متن دکمهٔ اقدام ---------- */
+S.refreshBtn=function(){
+  let lbl='صحبت';
+  const s=CH.save.d;
+  const q=CH.QUESTS[s.story.ch], step=q&&q.steps[s.story.step];
+  if(S.practice) lbl='ضربه';
+  else if(step&&step.type==='match'&&U.dist(S.player.x,S.player.y,540,1120)<130) lbl='مسابقه';
+  else { const t=S.nearest(); if(t) lbl=(t.type==='hay')?'برداشتن':'صحبت'; }
+  if(lbl!==S._lbl){ S._lbl=lbl; CH.ui.setBtnA(lbl); }
 };
 
 S.markerTarget=function(){
@@ -306,8 +344,9 @@ S.markerTarget=function(){
 /* ---------- تعامل ---------- */
 S.nearest=function(){
   const P=S.player; let best=null,bd=95;
+  const done=CH.save.d.story.done;
   for(const n of S.npcs){
-    if(n.id==='sassan'&&!(CH.save.d.story.ch>=3))continue;
+    if((n.id==='sassan'||n.id==='guard')&&!(CH.save.d.story.ch>=3||done))continue;
     const d=U.dist(P.x,P.y,n.x,n.y);
     if(d<bd){bd=d;best={type:'npc',ref:n};}
   }
@@ -493,8 +532,9 @@ S.render=function(ctx){
   }
 
   // NPC ها
+  const done=CH.save.d.story.done;
   for(const n of S.npcs){
-    if(n.id==='sassan'&&!(CH.save.d.story.ch>=3||CH.save.d.story.done))continue;
+    if((n.id==='sassan'||n.id==='guard')&&!(CH.save.d.story.ch>=3||done))continue;
     if(!vis(n.x,n.y))continue;
     const moving=n.id==='amir'&&Math.sin(t*0.7+n.x)>0.3;
     const px=n.x+(moving?Math.sin(t*0.5)*46:0);
@@ -513,8 +553,8 @@ S.render=function(ctx){
   // بازیکن
   const P=S.player;
   if(CH.save.d.story.hasHorse){
-    const mallet=CH.save.d.equipped.mallet;
-    CH.G.rider(ctx,{x:P.x,y:P.y,ang:P.ang,gallop:P.gallop,speed:P.speed,swing:P.swing,outfit:CH.save.d.equipped.outfit,controlled:false},t);
+    const h=CH.SHOP.horses.find(h=>h.id===CH.save.d.equipped.horse);
+    CH.G.rider(ctx,{x:P.x,y:P.y,ang:P.ang,gallop:P.gallop,speed:P.speed,swing:P.swing,outfit:CH.save.d.equipped.outfit,horse:h,controlled:false},t);
   } else {
     CH.G.person(ctx,{x:P.x,y:P.y,dir:P.ang,look:{head:'cap',robe:'#1ba894',hat:'#1c3a6e',skin:'#eab98c',hair:'#241608'}},t,P.speed>25);
     if(P.swing>0){
@@ -555,8 +595,14 @@ S.render=function(ctx){
 /* ---------- رویداد ضربه ---------- */
 CH.input.on('a',()=>{
   if(!S.active||CH.scenes.name!=='story')return;
-  if(CH.ui.isDialogOpen())return;
+  if(CH.ui.isDialogOpen()||CH.storyPaused)return;
   S.interact();
+  S.trySwing();
+});
+/* دکمهٔ نارنجی = ضربه با چوب چوگان */
+CH.input.on('b',()=>{
+  if(!S.active||CH.scenes.name!=='story')return;
+  if(CH.ui.isDialogOpen()||CH.storyPaused)return;
   S.trySwing();
 });
 })();

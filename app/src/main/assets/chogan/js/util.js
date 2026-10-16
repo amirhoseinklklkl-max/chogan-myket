@@ -20,7 +20,7 @@ CH.save={
   d:null,
   defaults(){
     return {
-      ver:1, name:'', coins:250, gems:5,
+      ver:1, name:'', coins:250, gems:5, adT:0,
       owned:{mallets:['chobi_kohan'],horses:[],outfits:['rustic']},
       equipped:{mallet:'chobi_kohan',horse:null,outfit:'rustic'},
       story:{ch:0,step:0,hasHorse:false,done:false,introSeen:false,grandMallet:false,polished:false,targetsHit:0,ringsPassed:0,hayDone:0,academyGoals:0},

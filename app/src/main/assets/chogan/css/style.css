@@ -24,11 +24,12 @@ input{user-select:text;-webkit-user-select:text}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 
 /* ---------- بوت ---------- */
-#scr-boot{background:radial-gradient(120% 140% at 50% 20%,#16324f 0%,var(--lapis-d) 70%);flex-direction:column;gap:10px;z-index:100}
-.boot-emblem{animation:pulse 2.2s ease-in-out infinite}
-.boot-title{font-size:min(15vw,84px);font-weight:900;color:var(--gold);text-shadow:0 4px 0 rgba(0,0,0,.35),0 0 34px rgba(232,184,75,.35);letter-spacing:1px}
-.boot-sub{font-size:min(5vw,26px);color:var(--sand);opacity:.9;letter-spacing:8px;margin-right:8px}
-.boot-load{margin-top:26px;color:#9fb4cf;font-size:15px;animation:fadeIn 1.2s ease infinite alternate}
+#scr-boot{background:radial-gradient(120% 140% at 50% 50%,#16324f 0%,var(--lapis-d) 70%);flex-direction:column;align-items:center;justify-content:center;gap:min(1.4vh,10px);padding:10px 16px;z-index:100;overflow:hidden}
+.boot-emblem{width:min(24vh,170px);height:min(24vh,170px);flex:0 0 auto;animation:pulse 2.2s ease-in-out infinite}
+.boot-emblem canvas{width:100%;height:100%;display:block}
+.boot-title{font-size:min(11vh,74px);font-weight:900;line-height:1.15;color:var(--gold);text-shadow:0 4px 0 rgba(0,0,0,.35),0 0 34px rgba(232,184,75,.35);letter-spacing:1px}
+.boot-sub{font-size:min(3.4vh,24px);color:var(--sand);opacity:.9;letter-spacing:8px;margin-right:8px}
+.boot-load{margin-top:min(2.6vh,18px);color:#9fb4cf;font-size:min(3vh,15px);animation:fadeIn 1.2s ease infinite alternate}
 
 /* ---------- چرخش گوشی ---------- */
 #rotate-overlay{position:fixed;inset:0;z-index:999;background:var(--lapis-d);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px}
@@ -38,13 +39,13 @@ input{user-select:text;-webkit-user-select:text}
 @media (orientation:portrait){#rotate-overlay{display:flex}}
 
 /* ---------- منوی اصلی ---------- */
-#scr-menu{background:linear-gradient(105deg,rgba(13,27,46,.15) 0%,rgba(13,27,46,.85) 62%);justify-content:flex-end}
-.menu-right{display:flex;flex-direction:column;gap:min(1.6vh,12px);padding:24px min(4vw,46px);max-height:100vh;overflow:hidden}
+#scr-menu{background:radial-gradient(140% 130% at 50% 42%,rgba(13,27,46,.08) 30%,rgba(13,27,46,.82) 100%);justify-content:center;align-items:center}
+.menu-right{display:flex;flex-direction:column;align-items:center;gap:min(1.6vh,12px);padding:16px 20px;max-height:100vh;overflow:hidden}
 .game-logo{text-align:center;margin-bottom:min(.6vh,4px)}
 .logo-ornament{color:var(--gold);opacity:.85;font-size:12px;letter-spacing:6px}
 .logo-title{font-size:min(13vh,72px);font-weight:900;line-height:1.05;color:var(--gold);text-shadow:0 4px 0 rgba(0,0,0,.4),0 0 40px rgba(232,184,75,.25)}
 .logo-sub{font-size:min(3.4vh,20px);color:var(--sand);letter-spacing:10px;margin-right:10px;opacity:.95}
-.menu-nav{display:flex;flex-direction:column;gap:min(1.2vh,9px);min-width:min(46vw,340px)}
+.menu-nav{display:flex;flex-direction:column;gap:min(1.2vh,9px);width:min(88vw,300px)}
 .mbtn{position:relative;display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,rgba(28,58,110,.92),rgba(20,40,80,.92));border:1px solid rgba(232,184,75,.4);border-radius:14px;padding:min(1.6vh,13px) 18px;color:#fff;font-family:inherit;font-size:min(2.6vh,18px);font-weight:700;cursor:pointer;transition:transform .12s,box-shadow .12s,border-color .12s;animation:floatUp .5s ease backwards}
 .mbtn:nth-child(1){animation-delay:.05s}.mbtn:nth-child(2){animation-delay:.12s}.mbtn:nth-child(3){animation-delay:.19s}.mbtn:nth-child(4){animation-delay:.26s}.mbtn:nth-child(5){animation-delay:.33s}
 .mbtn:hover{transform:translateX(-4px);border-color:var(--gold)}
@@ -109,13 +110,19 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 
 /* ---------- فروشگاه ---------- */
 .wallet{display:flex;gap:8px;align-items:center}
-.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(164px,1fr));gap:12px}
+.ad-card{grid-column:1/-1}
+.shop-card.ad-card{flex-direction:row;text-align:right;gap:14px;align-items:center;border-color:rgba(95,210,255,.4);background:linear-gradient(100deg,rgba(30,90,120,.4),rgba(15,30,55,.7))}
+.ad-card .ad-ic{flex:0 0 auto}
+.ad-card .shop-name{font-size:15.5px}
+.ad-card .ad-desc{font-size:12px;color:#bfe6f5;line-height:1.7}
+.ad-card .shop-buy{width:150px}
 .shop-card{background:linear-gradient(180deg,rgba(28,58,110,.55),rgba(15,30,55,.7));border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;transition:.15s}
 .shop-card.equipped{border-color:var(--gold);box-shadow:0 0 18px rgba(232,184,75,.25)}
 .shop-card .tag{position:absolute;top:8px;right:8px;background:var(--gold);color:#3d2a00;font-size:10px;font-weight:900;border-radius:20px;padding:2px 9px}
 .shop-card .tag.gem-tag{background:#37b6ff;color:#00293d}
-.shop-thumb{width:110px;height:74px;border-radius:12px;background:radial-gradient(circle at 50% 40%,#24457c,#122542);display:flex;align-items:center;justify-content:center}
-.shop-thumb canvas{width:110px;height:74px}
+.shop-thumb{width:120px;height:86px;border-radius:12px;background:radial-gradient(circle at 50% 40%,#24457c,#122542);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.shop-thumb canvas{width:120px;height:86px}
 .shop-name{font-weight:800;font-size:14.5px;text-align:center}
 .shop-stats{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .stat-chip{font-size:10.5px;background:rgba(27,168,148,.2);border:1px solid rgba(27,168,148,.5);color:#8ff0dd;border-radius:8px;padding:2px 7px}
@@ -219,7 +226,37 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 body.in-dialog .btns-zone{display:none}
 body.in-dialog .joy-zone{opacity:.25}
 
+/* دکمه توقف بخش داستانی */
+#btn-story-pause{position:absolute;top:calc(10px + env(safe-area-inset-top));left:14px;right:auto}
+
+/* ---------- تبلیغ جایزه‌دار ---------- */
+.ad-creative{position:relative;height:min(26vh,150px);border-radius:14px;background:linear-gradient(135deg,#1c3a6e,#1ba894 60%,#caa84f);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;margin-bottom:14px;overflow:hidden}
+.ad-creative::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 14px,transparent 14px 28px)}
+.ad-tag{position:absolute;top:8px;right:10px;background:rgba(0,0,0,.45);color:#fff;font-size:10px;padding:2px 8px;border-radius:8px;letter-spacing:1px}
+.ad-title{font-weight:900;font-size:min(4vh,20px);color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.4)}
+.ad-sub{font-size:min(2.6vh,12px);color:#f0dcae}
+.ad-count{margin-top:6px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:var(--gold)}
+.ad-card .ad-ic canvas{width:64px;height:64px}
+.ad-card .ad-txt{flex:1;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
+.ad-card .shop-buy{align-self:center}
+
 /* HUD مسابقه — توقف کنار چیپ‌ها */
 .match-top{max-width:94vw;gap:8px}
 .match-top .pause-btn{position:static;flex:0 0 auto}
 .team-chip b{overflow:hidden;text-overflow:ellipsis}
+
+/* صفحه‌های خیلی کوتاه (گوشی‌های کم‌ارتفاع در حالت افقی) */
+@media (max-height:420px){
+  .menu-right{gap:5px;padding:4px 16px}
+  .mbtn{padding:6px 12px;font-size:14px;gap:9px}
+  .mbtn .mi{font-size:16px}
+  .mbtn em{font-size:11px}
+  .game-logo{margin-bottom:0}
+  .logo-ornament{display:none}
+  .logo-title{font-size:min(11vh,44px);line-height:1}
+  .logo-sub{font-size:11px;letter-spacing:6px;margin-right:6px}
+  .menu-nav{width:min(88vw,270px);gap:5px}
+  .menu-wallet{margin-top:2px}
+  .pill{padding:3px 11px;font-size:12px}
+  .menu-foot{font-size:10px;margin-top:0}
+}

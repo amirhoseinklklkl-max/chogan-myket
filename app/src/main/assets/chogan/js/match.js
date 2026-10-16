@@ -25,13 +25,16 @@ M.start=function(cfg){
   M.riders=[];
   // تیم ما (a) سمت چپ — به دروازه راست حمله
   const myNames=['me','amir','golnar'];
+  const pool=CH.SHOP.horses;
   for(let i=0;i<nPer;i++){
-    M.riders.push(M.mkRider('a',i,nPer,{spd:M.stats.spd,stam:M.stats.stam,pow:M.stats.pow,acc:M.stats.acc},myNames[i]));
+    // بازیکن اول با اسبِ خودت — بقیه با اسب‌های متنوع
+    const h=i===0?(horse||pool[0]):pool[U.randi(0,pool.length-1)];
+    M.riders.push(M.mkRider('a',i,nPer,{spd:M.stats.spd,stam:M.stats.stam,pow:M.stats.pow,acc:M.stats.acc},myNames[i],h));
   }
   const diff=cfg.diff||0.7;
   const enNames=['حریف ۱','حریف ۲','حریف ۳'];
   for(let i=0;i<nPer;i++){
-    M.riders.push(M.mkRider('b',i,nPer,{spd:U.clamp(0.86*diff,0.7,1.15),stam:0.9,pow:U.clamp(0.9*diff,0.75,1.15),acc:U.clamp(0.85*diff,0.6,1.1)},enNames[i]));
+    M.riders.push(M.mkRider('b',i,nPer,{spd:U.clamp(0.86*diff,0.7,1.15),stam:0.9,pow:U.clamp(0.9*diff,0.75,1.15),acc:U.clamp(0.85*diff,0.6,1.1)},enNames[i],pool[U.randi(0,pool.length-1)]));
   }
   M.ctl=0; // ایندکس بازیکن کنترلی تیم a
   M.resetPositions(true);
@@ -40,9 +43,9 @@ M.start=function(cfg){
   CH.input.enable(true);
 };
 
-M.mkRider=function(team,i,n,stats,name){
+M.mkRider=function(team,i,n,stats,name,horse){
   return {
-    team,i,name,stats,
+    team,i,name,stats,horse:horse||null,
     x:0,y:0,vx:0,vy:0,ang:team==='a'?0:Math.PI,
     gallop:Math.random()*6,speed:0,
     stamina:1,swing:0,swingHit:false,cool:0,

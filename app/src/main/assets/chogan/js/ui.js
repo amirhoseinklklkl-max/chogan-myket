@@ -31,11 +31,21 @@ UI.setBtnA=function(label){
 };
 
 /* ================= دیالوگ ================= */
-let dlg={lines:null,i:0,cb:null,typing:false,charI:0,timer:null,done:false};
+let dlg={lines:null,i:0,cb:null,typing:false,charI:0,timer:null,done:false,last:null};
 UI.isDialogOpen=function(){ return !document.getElementById('dlg').classList.contains('hidden'); };
+/* آخرین انتخاب بازیکن در دیالوگ (برای چالش‌ها) */
+UI.lastChoice=function(){ return dlg.last; };
+UI.clearChoice=function(){ dlg.last=null; };
+UI.forceCloseDialog=function(){
+  clearInterval(dlg.timer);
+  dlg.lines=null; dlg.cb=null; dlg.typing=false; dlg.last=null;
+  document.getElementById('dlg').classList.add('hidden');
+  document.getElementById('dlg-choices').classList.add('hidden');
+  document.body.classList.remove('in-dialog');
+};
 
 UI.dialog=function(lines,i,cb){
-  dlg.lines=lines; dlg.i=i||0; dlg.cb=cb;
+  dlg.lines=lines; dlg.i=i||0; dlg.cb=cb; dlg.last=null;
   document.body.classList.add('in-dialog');
   const line=lines[dlg.i];
   document.getElementById('dlg').classList.remove('hidden');
@@ -46,6 +56,9 @@ function renderLine(line){
   const textEl=document.getElementById('dlg-text');
   const faceCv=document.getElementById('dlg-face');
   const nextEl=document.getElementById('dlg-next');
+  // پاک‌سازی انتخاب‌های قدیمی (جلوگیری از کلیک فانتوم)
+  const oldChoices=document.getElementById('dlg-choices');
+  oldChoices.innerHTML=''; oldChoices.classList.add('hidden');
   const ch=CH.CHARS[line.s]||CH.CHARS.villager;
   // اسم
   if(line.s==='narr'||line.s==='sys'){ nameEl.textContent=line.s==='sys'?'':'روایت'; nameEl.classList.add('narr'); }
@@ -78,6 +91,7 @@ function showChoices(line){
     b.onclick=(e)=>{
       e.stopPropagation();
       CH.audio.play('click');
+      dlg.last=opt;
       box.classList.add('hidden');
       if(opt.fx&&opt.fx.coins){ CH.save.d.coins+=opt.fx.coins; CH.save.write(); UI.refreshCoins(); CH.audio.play('coin'); }
       // پاسخ انتخاب به عنوان خط بعدی
@@ -251,7 +265,7 @@ UI.renderShop=function(){
       const card=document.createElement('div');
       card.className='shop-card'+(equipped?' equipped':'');
       const th=document.createElement('div'); th.className='shop-thumb';
-      const cv=document.createElement('canvas'); cv.width=110; cv.height=74;
+      const cv=document.createElement('canvas'); cv.width=120; cv.height=86;
       th.appendChild(cv); card.appendChild(th);
       if(tab==='mallets')CH.G.itemIcon(cv,'mallet',it);
       else if(tab==='horses')CH.G.itemIcon(cv,'horse',it);
@@ -268,7 +282,10 @@ UI.renderShop=function(){
       btn.className='shop-buy';
       if(equipped){ btn.classList.add('equipped'); btn.textContent='✓ سوار است'; btn.disabled=true; }
       else if(owned){ btn.classList.add('equip'); btn.textContent='انتخاب'; btn.onclick=()=>{
-        s.equipped[eqKey]=it.id; CH.save.write(); CH.audio.play('pop'); UI.renderShop();
+        s.equipped[eqKey]=it.id; CH.save.write(); CH.audio.play('pop');
+        if(eqKey==='horse'){ CH.bigNote('سوار بر '+it.name+'!',1300); }
+        else CH.toast('«'+it.name+'» انتخاب شد');
+        UI.renderShop();
       }; }
       else {
         const gem=it.gem;
@@ -280,11 +297,27 @@ UI.renderShop=function(){
       grid.appendChild(card);
     }
   } else if(tab==='iap'){
+    // کارت تبلیغ جایزه‌دار — تماشای تبلیغ، گرفتن سکه
+    const adCard=document.createElement('div');
+    adCard.className='shop-card ad-card';
+    const aic=document.createElement('div'); aic.className='ad-ic';
+    const acv=document.createElement('canvas'); acv.width=64; acv.height=64;
+    aic.appendChild(acv); adCard.appendChild(aic);
+    CH.G.itemIcon(acv,'reward',{});
+    const atx=document.createElement('div'); atx.className='ad-txt';
+    atx.innerHTML='<div class="shop-name">تبلیغ جایزه‌دار 🎁</div><div class="ad-desc">یک آگهی کوتاه ببین و ۱۰۰ سکه بگیر — هر ۳ دقیقه یک‌بار!</div>';
+    adCard.appendChild(atx);
+    const abtn=document.createElement('button');
+    abtn.className='shop-buy buy';
+    abtn.textContent='▶ تماشای تبلیغ';
+    abtn.onclick=()=>UI.rewardedAd();
+    adCard.appendChild(abtn);
+    grid.appendChild(adCard);
     for(const it of CH.SHOP.iap){
       const card=document.createElement('div');
       card.className='shop-card';
       const th=document.createElement('div'); th.className='shop-thumb';
-      const cv=document.createElement('canvas'); cv.width=110; cv.height=74;
+      const cv=document.createElement('canvas'); cv.width=120; cv.height=86;
       th.appendChild(cv); card.appendChild(th);
       CH.G.itemIcon(cv,'iap',it);
       const nm=document.createElement('div'); nm.className='shop-name'; nm.textContent=it.name; card.appendChild(nm);
@@ -298,9 +331,47 @@ UI.renderShop=function(){
     }
     const note=document.createElement('p');
     note.className='hint'; note.style.gridColumn='1/-1'; note.style.textAlign='center';
-    note.textContent='⚡ خرید درون‌برنامه‌ای در نسخهٔ اندروید پس از اتصال درگاه پرداخت (بازار/پلی) فعال می‌شود — فعلاً حالت آزمایشی است و آیتم‌ها را رایگان می‌دهد.';
+    note.textContent='⚡ خرید درون‌برنامه‌ای در نسخهٔ اندروید پس از اتصال درگاه پرداخت (بازار/پلی) فعال می‌شود — فعلاً حالت آزمایشی است و آیتم‌ها را رایگان می‌دهد. تبلیغ جایزه‌دار هم فعلاً شبیه‌سازی شده است.';
     grid.appendChild(note);
   }
+};
+
+/* ---------- تبلیغ جایزه‌دار ---------- */
+UI.adBusy=false; UI._adIv=null;
+UI.rewardedAd=function(){
+  if(UI.adBusy)return;
+  const s=CH.save.d;
+  const left=Math.ceil((180000-(Date.now()-(s.adT||0)))/1000);
+  if(left>0){ CH.toast('هر ۳ دقیقه یک‌بار! ('+U.toFa(left)+' ثانیه دیگر)'); CH.audio.play('fail'); return; }
+  UI.adBusy=true;
+  UI.showModal('ad-modal');
+  document.getElementById('ad-reward').classList.add('hidden');
+  document.getElementById('ad-cancel').classList.remove('hidden');
+  let n=5;
+  const cnt=document.getElementById('ad-count');
+  cnt.textContent=U.toFa(n);
+  clearInterval(UI._adIv);
+  UI._adIv=setInterval(()=>{
+    n--;
+    if(n<=0){
+      clearInterval(UI._adIv); UI._adIv=null;
+      cnt.textContent='✓';
+      document.getElementById('ad-reward').classList.remove('hidden');
+      document.getElementById('ad-cancel').classList.add('hidden');
+    } else cnt.textContent=U.toFa(n);
+  },1000);
+};
+UI.adGrant=function(){
+  clearInterval(UI._adIv); UI._adIv=null;
+  UI.hideModal('ad-modal'); UI.adBusy=false;
+  CH.save.d.coins+=100; CH.save.d.adT=Date.now(); CH.save.write();
+  UI.refreshCoins(); CH.audio.play('coin'); CH.fx.confetti(40);
+  CH.toast('+۱۰۰ سکه از تبلیغ جایزه‌دار!');
+};
+UI.adCancel=function(){
+  clearInterval(UI._adIv); UI._adIv=null;
+  UI.hideModal('ad-modal'); UI.adBusy=false;
+  CH.audio.play('click');
 };
 
 UI.buyItem=function(it,eqKey){
@@ -391,19 +462,27 @@ UI.bind=function(){
     if(e.code==='Space'||e.code==='Enter')UI.dialogAdvance();
   });
 
-  // توقف مسابقه
-  $('btn-pause').onclick=()=>{ CH.audio.play('click'); CH.match.paused=true; $('pause-title').textContent='توقف مسابقه'; UI.showModal('scr-pause'); };
-  $('btn-resume').onclick=()=>{ CH.audio.play('click'); UI.hideModal('scr-pause'); CH.match.paused=false; };
+  // توقف مسابقه / بخش داستانی
+  $('btn-pause').onclick=()=>{ CH.audio.play('click'); CH.match.paused=true; $('pause-title').textContent='توقف مسابقه'; $('btn-restart').style.display=''; UI.showModal('scr-pause'); };
+  $('btn-story-pause').onclick=()=>{ CH.audio.play('click'); CH.storyPaused=true; $('pause-title').textContent='بخش داستانی'; $('btn-restart').style.display='none'; UI.showModal('scr-pause'); };
+  $('btn-resume').onclick=()=>{ CH.audio.play('click'); UI.hideModal('scr-pause'); CH.match.paused=false; CH.storyPaused=false; };
   $('btn-restart').onclick=()=>{
     CH.audio.play('click'); UI.hideModal('scr-pause');
     if(CH.match.cfg){ const c=Object.assign({},CH.match.cfg); CH.match.stop(); CH.match.start(c); }
   };
   $('btn-quit').onclick=()=>{
     CH.audio.play('click'); UI.hideModal('scr-pause');
-    CH.match.stop(); UI.hideHud(); UI.hideAll();
+    CH.match.stop(); CH.storyPaused=false;
+    UI.forceCloseDialog();
+    UI.hideModal('confirm-modal');
+    UI.hideHud(); UI.hideAll();
     CH.input.enable(false);
     CH.scenes.set('menu');
   };
+
+  // تبلیغ جایزه‌دار
+  $('ad-reward').onclick=()=>{ UI.adGrant(); };
+  $('ad-cancel').onclick=()=>{ UI.adCancel(); };
 };
 
 /* ================= تنظیمات sync ================= */

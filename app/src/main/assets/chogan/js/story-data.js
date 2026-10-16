@@ -11,6 +11,7 @@ CH.CHARS={
   tahmineh:{name:'تهمینه', female:true, hat:'scarf', hatCol:'#2e5a3c', robe:'#2e5a3c', belt:'#1a3826', skin:'#dca878', hair:'#1a1008', voice:'زن جوان قاطع و گرم، لحن کارگاهیِ مهربان'},
   sassan:  {name:'ساسان', female:false, hat:'cap', hatCol:'#1c1c28', robe:'#2a2a3e', belt:'#e8b84b', skin:'#e8c0a0', hair:'#101018', voice:'مرد جوان مغرور، لحن تحقیرآمیز خنگ‌لاک، بعداً محترم‌تر'},
   khosrow: {name:'استاد خسرو', female:false, hat:'turban', hatCol:'#3a4a6a', robe:'#3a4a6a', belt:'#1c2a44', skin:'#d8a878', hair:'#333', beard:'#4a4a4a', voice:'مرد میانسال جدی، مربی سخت‌گیر با عدالت'},
+  guard:   {name:'نگهبان دروازه', female:false, hat:'turban', hatCol:'#2a4a5e', robe:'#3d6e8a', belt:'#1c3040', skin:'#d8a878', hair:'#241608', beard:'#241a10', voice:'مرد میانسال قاطع ولی درست‌کار، لحن نگهبانی رسمی اما مهربان'},
   golnar:  {name:'گلنار', female:true, hat:'scarf', hatCol:'#b8862a', robe:'#b8862a', belt:'#7a5514', skin:'#f0c098', hair:'#2a1a0c', voice:'زن جوان باهوش و شاد، تاکتیک‌دان'},
   salar:   {name:'سالار بازی‌ها', female:false, hat:'royal', hatCol:'#caa84f', robe:'#1c3a6e', belt:'#e8b84b', skin:'#e0b088', hair:'#333', beard:'#333', voice:'مرد رسمی و باشکوه، منادی دربار'},
   villager:{name:'دهکده', female:false, hat:'cap', hatCol:'#6a5a3a', robe:'#7a6a4a', belt:'#4a3a24', skin:'#e0b088', hair:'#241608', voice:'مردم عادی دهکده'},
@@ -21,30 +22,50 @@ CH.CHARS={
 CH.OUTFITS={
   rustic:  {name:'جامه دهقانی', robe:'#7a6a4a', belt:'#4a3a24', hat:'#5a4632', bard:'#8a7a5a', price:0, gem:false, desc:'ساده و راحت، بوی نون تنوری می‌ده'},
   turkman: {name:'جامه ترکمن', robe:'#8a3a3a', belt:'#3a1a1a', hat:'#4a2a2a', bard:'#a04a3a', price:250, gem:false, desc:'سرخ‌پوشِ تاخت‌زن‌های ترکمن'},
-  esfahani:{name:'جامه اصفهانی', robe:'#1ba894', belt:'#e8b84b', hat:'#0e6e60', bard:'#1c7a6e', price:600, gem:false, desc:'طرح کاشی‌های مسجد شیخ لطف‌الله'},
-  royal:   {name:'جامه سلطنتی', robe:'#1c3a6e', belt:'#e8b84b', hat:'#caa84f', bard:'#caa84f', price:20, gem:true, desc:'جامه دربار شاه عباس، طلودوزی‌شده'}
+  shirazi: {name:'جامه شیرازی', robe:'#c25a7a', belt:'#5a2a3a', hat:'#8a3a5a', bard:'#c25a7a', price:450, gem:false, desc:'به گلابِ شیراز آغشته است'},
+  esfahani:{name:'جامه اصفهانی', robe:'#1ba894', belt:'#e8b84b', hat:'#0e6e60', bard:'#1c7a6e', price:700, gem:false, desc:'طرح کاشی‌های مسجد شیخ لطف‌الله'},
+  shabgard:{name:'جامه شب‌گرد', robe:'#23283e', belt:'#8a94a8', hat:'#14182a', bard:'#2a3350', price:1000, gem:false, desc:'آرام مثل شب، تند مثل باد'},
+  kashani: {name:'جامه کاشان', robe:'#b8862a', belt:'#7a5514', hat:'#6a4a1a', bard:'#caa84f', price:1400, gem:false, desc:'عطر گلاب و مسقطیِ کاشان'},
+  pahlavani:{name:'جامه پهلوانی', robe:'#8a2a2a', belt:'#3a3a44', hat:'#2a2a32', bard:'#8a2a2a', price:2800, gem:false, desc:'جامهٔ آجری میدان‌های پهلوانی'},
+  firouzeh:{name:'جامه فیروزه', robe:'#18b8a0', belt:'#e8b84b', hat:'#0e6e60', bard:'#1e9fd8', price:32, gem:true, desc:'فیروزهٔ نیشابور بر سینه'},
+  royal:   {name:'جامه سلطنتی', robe:'#1c3a6e', belt:'#e8b84b', hat:'#caa84f', bard:'#caa84f', price:20, gem:true, desc:'جامه دربار شاه عباس، طلودوزی‌شده'},
+  mehromah:{name:'جامه مهر و ماه', robe:'#5a3a8a', belt:'#e8b84b', hat:'#caa84f', bard:'#8a5ab8', price:50, gem:true, desc:'مهر بر سینه، ماه بر کلاه'}
 };
 
 /* ---------- فروشگاه ---------- */
 CH.SHOP={
   mallets:[
-    {id:'chobi_kohan', name:'چوب کهن پدربزرگ', price:0, gem:false, pow:1.0, acc:1.0, desc:'همان چوب کهنه با نقطه‌های لکه‌های چراغ', gold:false},
-    {id:'chobi_bid',   name:'چوب بیدِ زرنگار', price:400, gem:false, pow:1.1, acc:1.18, desc:'سبک و فرم‌گرفته، دوستِ مچ دست', gold:false},
-    {id:'chobi_shamshad', name:'چوب شمشاد کمان‌کش', price:900, gem:false, pow:1.22, acc:1.1, desc:'سفت و کوبنده، مثل دستِ پهلوان', gold:false},
-    {id:'chobi_zarrin', name:'چوب زرین پارس', price:25, gem:true, pow:1.32, acc:1.28, desc:'دستهٔ عاج، نقره‌کوبِ اصفهان', gold:true}
+    {id:'chobi_kohan', name:'چوب کهن پدربزرگ', price:0, gem:false, pow:1.0, acc:1.0, col:'#5f3d1e', desc:'همان چوب کهنه با نقطه‌های لکه‌های چراغ'},
+    {id:'chobi_tut',   name:'چوب توتِ کهک', price:300, gem:false, pow:1.06, acc:1.08, col:'#8a6a4a', desc:'سبک و خوش‌دست، مال روزهای اول'},
+    {id:'chobi_bid',   name:'چوب بیدِ زرنگار', price:550, gem:false, pow:1.1, acc:1.18, col:'#6a5a3a', desc:'سبک و فرم‌گرفته، دوستِ مچ دست'},
+    {id:'chobi_narvan', name:'چوب نارونِ دشت', price:800, gem:false, pow:1.16, acc:1.08, col:'#a05a2a', desc:'کوبنده مثل باران بهشت‌باران'},
+    {id:'chobi_shamshad', name:'چوب شمشاد کمان‌کش', price:1100, gem:false, pow:1.22, acc:1.12, col:'#7a5a2a', desc:'سفت و کوبنده، مثل دستِ پهلوان'},
+    {id:'chobi_ars',   name:'چوب ارسِ کوهسار', price:1600, gem:false, pow:1.26, acc:1.2, col:'#5a4a3a', desc:'از ارسِ کوهسار تراشیده‌شده، خنک و استوار'},
+    {id:'chobi_pahlavan', name:'چوب پهلوانی رستم', price:2600, gem:false, pow:1.38, acc:1.15, col:'#4a3a5a', desc:'به سنگینی ضربهٔ رستم، به روشنی نامش'},
+    {id:'chobi_mina',  name:'چوب میناکاری', price:28, gem:true, pow:1.2, acc:1.42, col:'#1e9fd8', desc:'دستهٔ میناکاری — چشمِ بازِ میدان'},
+    {id:'chobi_zarrin', name:'چوب زرین پارس', price:25, gem:true, pow:1.32, acc:1.28, col:'#caa84f', gold:true, desc:'دستهٔ عاج، نقره‌کوبِ اصفهان'},
+    {id:'chobi_tus',   name:'چوب شاهانهٔ طوس', price:55, gem:true, pow:1.45, acc:1.35, col:'#e8b84b', gold:true, desc:'چوب درباریان طوس با پوملِ یاقوت — سلطانِ چوب‌ها'}
   ],
   horses:[
-    {id:'badba',   name:'بادبه', price:300, gem:false, spd:1.0, stam:1.0, coat:'#7a5233', bard:'#8a7a5a', desc:'اسب پیر و باوفای تهمینه'},
-    {id:'shabdiv', name:'شبدیز', price:700, gem:false, spd:1.16, stam:1.05, coat:'#2e2420', bard:'#4a3a3a', desc:'سیال مثل شب، تند مثل باد'},
-    {id:'rakhsh',  name:'رخش کُهر', price:1200, gem:false, spd:1.06, stam:1.3, coat:'#9a7a5a', bard:'#6a4a2a', desc:'کُهرِ استوار، هیچ‌وقت خسته نمی‌شه'},
-    {id:'simorgh', name:'سیمرغ آتش‌پر', price:40, gem:true, spd:1.26, stam:1.26, coat:'#b8502a', bard:'#e8b84b', desc:'افسانهٔ میدان، اسبِ قهرمان‌ها', gem:true}
+    {id:'badba',    name:'بادبه', price:300, gem:false, spd:1.0, stam:1.0, coat:'#7a5233', bard:'#8a7a5a', mane:'#3c2717', size:1.0, desc:'اسب پیر و باوفای تهمینه'},
+    {id:'ghazal',   name:'غزال شتردوان', price:900, gem:false, spd:1.24, stam:0.92, coat:'#c49a6c', bard:'#a0845a', mane:'#8a6a4a', size:0.94, desc:'چابک‌ترین اسب دشت — ولی زود خسته می‌شه'},
+    {id:'shabdiv',  name:'شبدیز', price:1400, gem:false, spd:1.18, stam:1.08, coat:'#2e2420', bard:'#4a3a3a', mane:'#15100c', size:1.05, desc:'سیال مثل شب، تند مثل باد'},
+    {id:'yamut',    name:'یاموت ترکمن', price:1900, gem:false, spd:1.2, stam:1.16, coat:'#a0522d', bard:'#a04a3a', mane:'#3a1f10', size:1.02, desc:'یراق‌آلوی ترکمن، پُرعزم و سترگ'},
+    {id:'rakhsh',   name:'رخش کُهر', price:2500, gem:false, spd:1.08, stam:1.34, coat:'#9a7a5a', bard:'#6a4a2a', mane:'#4a3423', size:1.12, desc:'کُهرِ استوار و تنومند، هیچ‌وقت خسته نمی‌شه'},
+    {id:'baragh',   name:'براق سپید', price:3400, gem:false, spd:1.22, stam:1.2, coat:'#e8e2d4', bard:'#b8b0a0', mane:'#cfc7b4', size:1.04, blaze:'#fff', desc:'سپیدَمِ میدان با شبلِ نقره‌ای'},
+    {id:'azarakhsh', name:'آذرخش', price:4400, gem:false, spd:1.32, stam:1.12, coat:'#46315e', bard:'#2a1c3e', mane:'#1a1030', size:1.06, blaze:'#e8b84b', desc:'سیاه‌بادگانی با شبل زرین — برقِ چشم‌ها را می‌دزدد'},
+    {id:'mahtab',   name:'مهتاب‌دوان', price:38, gem:true, spd:1.28, stam:1.22, coat:'#b8c4d8', bard:'#8a94a8', mane:'#8a94a8', size:1.03, blaze:'#fff', socks:'#e8eef8', desc:'نقره‌فام مثل شب مهتابی، با پاهای سپید'},
+    {id:'simorgh',  name:'سیمرغ آتش‌پر', price:46, gem:true, spd:1.3, stam:1.28, coat:'#b8502a', bard:'#e8b84b', mane:'#5a1c0c', size:1.06, spots:'#e8b84b', desc:'افسانهٔ میدان با لکه‌های آتشین، اسبِ قهرمان‌ها'},
+    {id:'parnian',  name:'پرنیان زرین', price:60, gem:true, spd:1.34, stam:1.3, coat:'#d8b040', bard:'#fff2c8', mane:'#8a6a14', size:1.05, spots:'#fff6d8', blaze:'#fff6d8', desc:'زرین‌پوشِ افسانه‌ای — آرزوی هر چوگان‌بازی'}
   ],
   outfits:CH.OUTFITS,
   iap:[
     {id:'iap_coin_1', name:'کیسهٔ سکه', kind:'coins', amount:500, priceLabel:'۹۹ هزار تومان', desc:'۵۰۰ سکهٔ طلایی برای تجهیزات'},
     {id:'iap_coin_2', name:'صندوق سکه', kind:'coins', amount:1500, priceLabel:'۲۴۹ هزار تومان', desc:'۱۵۰۰ سکه — بهترین ارزش', best:true},
+    {id:'iap_coin_3', name:'خزانهٔ سلطنتی سکه', kind:'coins', amount:4000, priceLabel:'۴۹۹ هزار تومان', desc:'۴۰۰۰ سکه — برای سلطان‌های میدان'},
     {id:'iap_gem_1',  name:'کیسهٔ الماس', kind:'gems', amount:10, priceLabel:'۱۴۹ هزار تومان', desc:'۱۰ الماس گران‌بها'},
     {id:'iap_gem_2',  name:'صندوق الماس', kind:'gems', amount:35, priceLabel:'۴۴۹ هزار تومان', desc:'۳۵ الماس + هدیهٔ جامهٔ سلطنتی', bonus:'royal'},
+    {id:'iap_gem_3',  name:'خزانهٔ الماس', kind:'gems', amount:80, priceLabel:'۷۹۹ هزار تومان', desc:'۸۰ الماس + هدیهٔ چوب شاهانهٔ طوس', bonus:'chobi_tus'},
     {id:'iap_noads',  name:'حذف تبلیغات', kind:'noads', amount:0, priceLabel:'۷۹ هزار تومان', desc:'تجربهٔ بازی بدون وقفه'}
   ]
 };
@@ -69,7 +90,7 @@ D.ch1_intro=[
   {id:'ch1_narr_02', s:'narr', t:'پسری آنجا زندگی می‌کرد که فقط یک آرزو داشت: چوگان بازی کردن. اون پسر تو هستی، {name}.'}
 ];
 D.ch1_grand=[
-  {id:'ch1_grand_01', s:'grand', t:'پس بالاخره اومدی، ریزه! سال‌هاست چشم‌بهره‌ات هستم.'},
+  {id:'ch1_grand_01', s:'grand', t:'بابابزرگ داوود! پس بالاخره اومدی، چشم به راهت بودم.'},
   {id:'ch1_me_01', s:'me', t:'بابابزرگ! اون روز که سواران چوگان از جلوی خانه رد شدن، دلم آن‌قدر تند زد که فکر کردم می‌پره!'},
   {id:'ch1_grand_02', s:'grand', t:'چوگان فقط یه بازی نیست پسرم. کارِ پادشاهان و شاعرهاست. از زمان کیان‌ها تا امروز، میدانش همیشه گرم بوده.'},
   {id:'ch1_grand_03', s:'grand', t:'این چوب کهنه رو ببین. مالِ جوونیِ من بود. حالا مالِ تو.'},
@@ -101,7 +122,7 @@ D.ch2_tahmineh=[
 ];
 D.ch2_hay_done=[
   {id:'ch2_tah_04', s:'tahmineh', t:'خوبه پسر! دیدم که دیدم. خب… این بادبه‌ست. پیرمردیه، ولی هنوز باد تو شکمش جون می‌داره.'},
-  {id:'ch2_sys_01', s:'sys', t:'بادبه به تو رسید! حالا می‌تونی سوار شی (دکمهٔ تندرو = تاخت)'},
+  {id:'ch2_sys_01', s:'sys', t:'بادبه به تو رسید! حالا می‌تونی سوار شی — با دکمهٔ ضربه، چوبت رو بچرخون!'},
   {id:'ch2_me_02', s:'me', t:'قسم می‌خورم مراقبتش باشم… با هم می‌بریمت بادبه!'},
   {id:'ch2_tah_05', s:'tahmineh', t:'شنیدم که! حالا سوار شو. پنج تا حلقهٔ تمرین رو سوار بر اسب رد کن، ببینم سوارکاری بلدی یا هنوز باید کفترها رو بشمری!'}
 ];
@@ -126,7 +147,18 @@ D.ch4_khosrow=[
   {id:'ch4_me_01', s:'me', t:'اومدم که چوگان‌باز بشم، استاد.'},
   {id:'ch4_khos_02', s:'khosrow', t:'(می‌خندد) از هر ده نفر این حرف رو می‌زنه، ده‌تاشون قبل از اولین تمرین ول می‌کنن.'},
   {id:'ch4_khos_03', s:'khosrow', t:'توپ و حلقه‌ها اون‌جاست. توی ۹۰ ثانیه شش تا گل بزن تا بفهمم پول بازیکنی یا پول حرف. برو!'},
-  {id:'ch4_sys_01', s:'sys', t:'مأموریت: در ۹۰ ثانیه ۶ گل به دروازهٔ خالی بزن! دکمهٔ تندرو دوستِ توئه.'}
+  {id:'ch4_sys_01', s:'sys', t:'مأموریت: در ۹۰ ثانیه ۶ گل به دروازهٔ خالی بزن! دکمهٔ ضربه دوستِ توئه.'}
+];
+
+/* چالش نگهبان دروازهٔ شهر */
+D.ch4_gate=[
+  {id:'ch4_guard_01', s:'guard', t:'ایست! این دروازهٔ شهر است، نه درِ باغ. هرکس راهِ آکادمی سلطنتی را دارد، باید یک پاسخ بلد باشد.'},
+  {id:'ch4_guard_02', s:'guard', t:'خوب گوش کن: چوگان در سال ۲۰۱۶ به فهرست میراث جهانیِ کدام سازمان ثبت شد؟',
+   choice:[
+     {t:'یونسکو!', ok:true, reply:'آفرین پسر! چوگان میراث همهٔ ایرانیان است. راهت باز باشد — و در آکادمی بدرخش!'},
+     {t:'فیفا!', reply:'فیفا؟! آن مالِ توپِ گرد و دروازهٔ تورداره. برو از بابابزرگت بپرس و برگرد!'},
+     {t:'کمیتهٔ المپیک!', reply:'المپیک هنوز چوگان رو آن‌طور که باید نشناخته. کمی فکر کن — پاسخ درست پیش چشم‌هایته!'}
+   ]}
 ];
 D.ch4_pass=[
   {id:'ch4_khos_04', s:'khosrow', t:'هوم. چوب کهنه، ضربهٔ تمیز. جالبه. می‌مونی، ریزه.'},
@@ -176,6 +208,7 @@ D.ambient={
   mother:['شام خوردی؟ یه لقمه بخور بعد برو تمرین!','دلتنگِ خانه می‌شی، ولی پاهات باید جلو بره.'],
   grand:['یادت باشه: چوگان بازیِ ذهنه، نه بازیِ بازو.','اسب رو ببوس که یارته، نه فقط سوارش شو.'],
   khosrow:['تمرین، تمرین، تمرین. استعداد بدون تمرین، علفِ هرزِ میدانه.'],
+  guard:['هیش! آهسته اسب‌وار!','دروازه تا غروب باز است — آکادمی سمت شرق شهره.'],
   salar:['میدان از قهرمان پُر نمی‌شه، از حافظهٔ قهرمان.']
 };
 
@@ -209,7 +242,7 @@ CH.QUESTS=[
       {type:'dialog', lines:D.ch3_win, after:'ch4start'},
     ]},
   { ch:4, title:'آکادمی سلطنتی', steps:[
-      {type:'reach', x:1560, y:770, r:120, obj:'به دروازهٔ شهر و آکادمی سلطنتی برو'},
+      {type:'reach', x:1560, y:770, r:120, obj:'به دروازهٔ شهر برو و پاسخ نگهبان را بده'},
       {type:'talk', npc:'khosrow', lines:D.ch4_khosrow, obj:'با استاد خسرو حرف بزن'},
       {type:'targets', n:6, area:'royalField', onFoot:false, goal:true, time:90, obj:'در ۹۰ ثانیه ۶ گل به دروازهٔ خالی بزن', reward:{coins:120}},
       {type:'talk', npc:'golnar', lines:D.ch4_pass, obj:'با گلنار صحبت کن'},

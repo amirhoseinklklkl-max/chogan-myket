@@ -6,11 +6,13 @@ const TAU=Math.PI*2;
 
 function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); }
 
-/* ---------- اسب (نمای بالا) ---------- */
+/* ---------- اسب (نمای بالا) ----------
+   opt: coat، mane (یال)، bard (جلوش)، size، blaze (شبل)، spots (لکه‌های بدن)، socks (پای سفید) */
 G.horse=function(ctx,x,y,ang,gallop,opt){
   opt=opt||{};
-  const coat=opt.coat||'#6e4a2f', mane=opt.mane||'#3c2717', bard=opt.bard; // جلوی رنگی
-  ctx.save(); ctx.translate(x,y); ctx.rotate(ang);
+  const coat=opt.coat||'#6e4a2f', mane=opt.mane||'#3c2717', bard=opt.bard;
+  const sz=opt.size||1;
+  ctx.save(); ctx.translate(x,y); ctx.rotate(ang); ctx.scale(sz,sz);
   // سایه
   if(CH.Q.shadow){ ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(2,4,46,20,0,0,TAU); ctx.fill(); }
   // دم
@@ -26,13 +28,16 @@ G.horse=function(ctx,x,y,ang,gallop,opt){
     ctx.beginPath(); ctx.moveTo(legs[i][0],legs[i][1]);
     const lx=legs[i][0]+Math.cos(swing)*10, ly=legs[i][1]+Math.abs(Math.sin(swing))*6*Math.sign(legs[i][1]);
     ctx.lineTo(lx,ly); ctx.stroke();
-    ctx.fillStyle=mane; ctx.beginPath(); ctx.arc(lx,ly,3.4,0,TAU); ctx.fill();
+    ctx.fillStyle=opt.socks||mane; ctx.beginPath(); ctx.arc(lx,ly,3.4,0,TAU); ctx.fill();
   }
   // بدن
   const grd=ctx.createLinearGradient(0,-16,0,16);
   grd.addColorStop(0,coat); grd.addColorStop(1,shade(coat,-28));
   ctx.fillStyle=grd; ctx.strokeStyle=shade(coat,-45); ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.ellipse(0,0,45,16,0,0,TAU); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(0,0,45,16,0,0,TAU); ctx.fill();
+  // لکه‌های بدن (قبل از خط دور)
+  if(opt.spots){ ctx.fillStyle=opt.spots; for(const sp of [[-20,-3],[0,7],[16,-5],[-8,-8],[8,3]]){ ctx.beginPath(); ctx.ellipse(sp[0],sp[1],5.5,3.6,0.3,0,TAU); ctx.fill(); } }
+  ctx.strokeStyle=shade(coat,-45); ctx.stroke();
   // گردن و سر
   ctx.beginPath(); ctx.moveTo(30,-6); ctx.quadraticCurveTo(52,-14,60,-4); ctx.quadraticCurveTo(64,2,58,8); ctx.quadraticCurveTo(44,10,32,8); ctx.closePath();
   ctx.fillStyle=coat; ctx.fill(); ctx.stroke();
@@ -41,6 +46,8 @@ G.horse=function(ctx,x,y,ang,gallop,opt){
   ctx.beginPath(); ctx.moveTo(34,-8); ctx.quadraticCurveTo(48,-16,58,-6); ctx.stroke();
   // گوش‌ها
   ctx.fillStyle=coat; ctx.beginPath(); ctx.moveTo(56,-8); ctx.lineTo(60,-16); ctx.lineTo(63,-7); ctx.closePath(); ctx.fill();
+  // شبل (نوار روشن روی پیشانی)
+  if(opt.blaze){ ctx.fillStyle=opt.blaze; ctx.beginPath(); ctx.ellipse(61,0,4.6,2.4,-0.15,0,TAU); ctx.fill(); }
   // پوزه
   ctx.fillStyle=shade(coat,18); ctx.beginPath(); ctx.ellipse(62,2,7,5,-.2,0,TAU); ctx.fill();
   // جلوآلافته (جلوش)
@@ -58,9 +65,16 @@ G.shade=shade;
 
 /* ---------- سوار چوگان‌باز ---------- */
 G.rider=function(ctx,e,time){
-  // e: {x,y,ang,gallop,team,outfit,swing(0..1),speed,controlled,me}
+  // e: {x,y,ang,gallop,team,outfit,horse,swing(0..1),speed,controlled,me}
   const oc=CH.OUTFITS[e.outfit||'rustic']||CH.OUTFITS.rustic;
-  G.horse(ctx,e.x,e.y,e.ang,e.gallop,{coat:'#7a5233',speed:e.speed,bard:oc.bard});
+  const hc=e.horse||null;
+  G.horse(ctx,e.x,e.y,e.ang,e.gallop,{
+    coat:(hc&&hc.coat)||'#7a5233',
+    mane:(hc&&hc.mane)||undefined,
+    bard:(hc&&hc.bard)||oc.bard,
+    size:hc&&hc.size, blaze:hc&&hc.blaze, spots:hc&&hc.spots, socks:hc&&hc.socks,
+    speed:e.speed
+  });
   ctx.save(); ctx.translate(e.x,e.y); ctx.rotate(e.ang);
   // پاها به رکاب
   ctx.strokeStyle='#3a2a1c'; ctx.lineWidth=5;
@@ -292,35 +306,85 @@ G.portrait=function(ctx,id,size){
   ctx.restore();
 };
 
-/* ---------- نماد آیتم‌های فروشگاه ---------- */
+/* ---------- نماد آیتم‌های فروشگاه (کاملاً داخل بوم، وسط‌چین) ---------- */
 G.itemIcon=function(cv,type,item){
+  item=item||{};
   const ctx=cv.getContext('2d'); const w=cv.width,h=cv.height;
   ctx.clearRect(0,0,w,h);
   const cx=w/2, cy=h/2;
   if(type==='mallet'){
-    ctx.save(); ctx.translate(cx,cy); ctx.rotate(-.6);
+    ctx.save(); ctx.translate(cx,cy+3);
+    // دسته
     ctx.strokeStyle='#8a5f34'; ctx.lineWidth=5; ctx.lineCap='round';
-    ctx.beginPath(); ctx.moveTo(-30,26); ctx.lineTo(22,-18); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-27,25); ctx.lineTo(16,-14); ctx.stroke();
+    ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.moveTo(-24,21); ctx.lineTo(13,-13); ctx.stroke();
+    // سر چوب
     ctx.strokeStyle=item.col||'#5f3d1e'; ctx.lineWidth=11;
-    ctx.beginPath(); ctx.moveTo(22,-18); ctx.lineTo(34,-28); ctx.stroke();
-    if(item.gem){ ctx.fillStyle='rgba(120,210,255,.6)'; ctx.beginPath(); ctx.arc(30,-25,14,0,TAU); ctx.fill(); }
-    if(item.gold){ ctx.fillStyle='rgba(255,215,100,.5)'; ctx.beginPath(); ctx.arc(30,-25,14,0,TAU); ctx.fill(); }
+    ctx.beginPath(); ctx.moveTo(16,-14); ctx.lineTo(28,-25); ctx.stroke();
+    ctx.strokeStyle='rgba(255,255,255,.28)'; ctx.lineWidth=2.4;
+    ctx.beginPath(); ctx.moveTo(14,-17); ctx.lineTo(25,-27); ctx.stroke();
+    // درخشش ویژه
+    if(item.gem){ ctx.fillStyle='rgba(120,210,255,.5)'; ctx.beginPath(); ctx.arc(28,-25,12,0,TAU); ctx.fill(); }
+    if(item.gold){ ctx.fillStyle='rgba(255,215,100,.5)'; ctx.beginPath(); ctx.arc(28,-25,12,0,TAU); ctx.fill(); }
     ctx.restore();
   } else if(type==='horse'){
-    const cy2=cy+8;
-    ctx.save(); ctx.translate(cx-38,cy2-6); ctx.scale(.62,.62);
-    G.horse(ctx,0,0,0,0,{coat:item.coat,bard:item.bard});
+    const sc=Math.min(.58,.58*(item.size||1));
+    ctx.save(); ctx.translate(cx,cy+5); ctx.scale(sc,sc);
+    G.horse(ctx,0,0,0,0,{coat:item.coat,bard:item.bard,mane:item.mane,blaze:item.blaze,spots:item.spots,socks:item.socks,size:1});
     ctx.restore();
   } else if(type==='outfit'){
-    ctx.fillStyle=item.robe;
-    ctx.beginPath(); ctx.moveTo(cx-26,cy+30); ctx.quadraticCurveTo(cx-30,cy-30,cx,cy-32);
-    ctx.quadraticCurveTo(cx+30,cy-30,cx+26,cy+30); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle=G.shade(item.robe,-50); ctx.lineWidth=2; ctx.stroke();
-    ctx.fillStyle=item.belt; ctx.fillRect(cx-24,cy+2,48,7);
-    ctx.fillStyle=item.hat; ctx.beginPath(); ctx.ellipse(cx,cy-40,18,9,0,0,TAU); ctx.fill();
+    ctx.save(); ctx.translate(cx,cy+7);
+    // عبا
+    ctx.fillStyle=item.robe||'#7a6a4a';
+    ctx.beginPath(); ctx.moveTo(-24,26); ctx.quadraticCurveTo(-27,-26,0,-28);
+    ctx.quadraticCurveTo(27,-26,24,26); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle=G.shade(item.robe||'#7a6a4a',-50); ctx.lineWidth=2; ctx.stroke();
+    // یالِ جامه
+    ctx.fillStyle='rgba(255,255,255,.18)';
+    ctx.beginPath(); ctx.moveTo(-14,22); ctx.quadraticCurveTo(-15,-20,0,-22); ctx.quadraticCurveTo(-4,0,-8,22); ctx.closePath(); ctx.fill();
+    // کمربند
+    ctx.fillStyle=item.belt||'#4a3a24'; ctx.fillRect(-22,0,44,7);
+    // کلاه
+    ctx.fillStyle=item.hat||'#5a4632';
+    ctx.beginPath(); ctx.ellipse(0,-33,16,7.5,0,0,TAU); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(0,-39,9,6,0,0,TAU); ctx.fill();
+    ctx.restore();
   } else if(type==='iap'){
-    if(item.kind==='coins'){ ctx.fillStyle='#e8b84b'; ctx.beginPath(); ctx.arc(cx,cy,26,0,TAU); ctx.fill(); ctx.fillStyle='#b9862a'; ctx.beginPath(); ctx.arc(cx,cy,18,0,TAU); ctx.stroke(); ctx.fillStyle='#7a5410'; ctx.font='bold 24px Vazirmatn'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('س',cx,cy+1); }
-    else if(item.kind==='gems'){ ctx.fillStyle='#37b6ff'; ctx.beginPath(); ctx.moveTo(cx,cy-28); ctx.lineTo(cx+24,cy-4); ctx.lineTo(cx,cy+28); ctx.lineTo(cx-24,cy-4); ctx.closePath(); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.5)'; ctx.beginPath(); ctx.moveTo(cx,cy-28); ctx.lineTo(cx+24,cy-4); ctx.lineTo(cx,cy-2); ctx.closePath(); ctx.fill(); }
+    if(item.kind==='coins'){ 
+      const g=ctx.createRadialGradient(cx-6,cy-8,2,cx,cy,26);
+      g.addColorStop(0,'#ffe9a8'); g.addColorStop(1,'#b9862a');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,25,0,TAU); ctx.fill();
+      ctx.strokeStyle='#7a5410'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,cy,17,0,TAU); ctx.stroke();
+      ctx.fillStyle='#7a5410'; ctx.font='bold 23px Vazirmatn'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('س',cx,cy+1); 
+    } else if(item.kind==='gems'){ 
+      ctx.fillStyle='#37b6ff'; ctx.beginPath(); ctx.moveTo(cx,cy-26); ctx.lineTo(cx+23,cy-3); ctx.lineTo(cx,cy+26); ctx.lineTo(cx-23,cy-3); ctx.closePath(); ctx.fill(); 
+      ctx.fillStyle='rgba(255,255,255,.5)'; ctx.beginPath(); ctx.moveTo(cx,cy-26); ctx.lineTo(cx+23,cy-3); ctx.lineTo(cx,cy-2); ctx.closePath(); ctx.fill(); 
+    } else if(item.kind==='noads'){
+      ctx.strokeStyle='#8fa8c8'; ctx.lineWidth=4;
+      ctx.beginPath(); ctx.roundRect(cx-22,cy-15,44,30,7); ctx.stroke();
+      ctx.fillStyle='#8fa8c8'; ctx.font='bold 13px Vazirmatn'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('آگهی',cx,cy+1);
+      ctx.strokeStyle='#c8433a'; ctx.lineWidth=5; ctx.lineCap='round';
+      ctx.beginPath(); ctx.moveTo(cx-26,cy+20); ctx.lineTo(cx+26,cy-20); ctx.stroke();
+    }
+  } else if(type==='reward'){
+    // جعبهٔ جایزهٔ تبلیغ
+    ctx.save(); ctx.translate(cx,cy+2);
+    ctx.fillStyle='#e8b84b'; rr(ctx,-19,-4,38,24,4); ctx.fill();
+    ctx.strokeStyle='#b9862a'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='#f3d98a'; rr(ctx,-22,-12,44,10,3); ctx.fill(); ctx.stroke();
+    // روبان
+    ctx.fillStyle='#c8433a'; ctx.fillRect(-3.5,-12,7,32);
+    // پاپیون
+    ctx.strokeStyle='#c8433a'; ctx.lineWidth=3; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(0,-12); ctx.quadraticCurveTo(-11,-20,-6,-12); ctx.quadraticCurveTo(-2,-9,0,-12); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,-12); ctx.quadraticCurveTo(11,-20,6,-12); ctx.quadraticCurveTo(2,-9,0,-12); ctx.stroke();
+    ctx.restore();
+    // ستاره‌های اطراف
+    ctx.fillStyle='rgba(255,230,150,.85)';
+    for(const st of [[-30,-18],[30,-14],[26,18],[-26,20]]){
+      ctx.beginPath(); ctx.arc(cx+st[0],cy+st[1],2.6,0,TAU); ctx.fill();
+    }
   }
 };
 

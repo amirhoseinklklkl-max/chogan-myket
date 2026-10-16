@@ -98,8 +98,8 @@
         <h3>🎮 کنترل‌ها</h3>
         <ul class="guide-list">
           <li><b>حرکت:</b> اهرم مجازی پایین صفحه (یا کلیدهای جهت‌دار / WASD در کامپیوتر)</li>
-          <li><b>دکمه آبی «ضربه»:</b> در مسابقه توپ را می‌زند؛ در داستان با آدم‌ها صحبت می‌کند و اشیاء را بررسی می‌کند</li>
-          <li><b>دکمه نارنجی «تندرو»:</b> اسب را به تاخت می‌اندازد (کمی از استقامت کم می‌کند)</li>
+          <li><b>دکمه آبی:</b> متنش با فضا عوض می‌شود — «صحبت» کنار آدم‌ها، «برداشتن» برای یونجه، «مسابقه» روی زمین چوگان و «ضربه» موقع تمرین</li>
+          <li><b>دکمه نارنجی «ضربه»:</b> ضربه زدن با چوب چوگان (در مسابقه: «ضربه» توپ را می‌زند و «تاخت» اسب را می‌تازاند)</li>
           <li><b>دیالوگ‌ها:</b> برای رفتن به جمله بعدی روی متن بزن؛ گاهی دو انتخاب داری!</li>
         </ul>
         <h3>🏇 قوانین مسابقه چوگان</h3>
@@ -188,9 +188,10 @@
 <!-- HUD داستان -->
 <div id="hud-story" class="hud hidden">
   <div class="obj-bar" id="obj-bar"><span class="obj-ic">🎯</span><span id="obj-text">…</span></div>
+  <button class="pause-btn" id="btn-story-pause">⏸</button>
   <div class="joy-zone" id="joy-zone"><div class="joy-base hidden" id="joy-base"><div class="joy-thumb" id="joy-thumb"></div></div></div>
   <div class="btns-zone">
-    <div class="act-btn b" id="btn-b"><span>تندرو</span></div>
+    <div class="act-btn b" id="btn-b"><span>ضربه</span></div>
     <div class="act-btn a" id="btn-a"><span id="btn-a-label">صحبت</span></div>
   </div>
 </div>
@@ -274,6 +275,24 @@
     <div class="modal-btns">
       <button class="mbtn small" id="confirm-no">نه، بی‌خیال</button>
       <button class="mbtn small primary" id="confirm-yes">آره</button>
+    </div>
+  </div>
+</div>
+
+<!-- تبلیغ جایزه‌دار -->
+<div id="ad-modal" class="modal hidden">
+  <div class="modal-box">
+    <h3>🎁 تبلیغ جایزه‌دار</h3>
+    <p class="hint">تا پایان این آگهی کوتاه صبر کن، جایزه‌ات را بگیر!</p>
+    <div class="ad-creative">
+      <div class="ad-tag">آگهی</div>
+      <div class="ad-title">کاروان چوگانِ زرین</div>
+      <div class="ad-sub">بهترین چوب‌ها و اسب‌های اصیل پارس</div>
+      <div class="ad-count" id="ad-count">۵</div>
+    </div>
+    <div class="modal-btns">
+      <button class="mbtn small" id="ad-cancel">بستن</button>
+      <button class="mbtn small primary hidden" id="ad-reward">دریافت ۱۰۰ سکه</button>
     </div>
   </div>
 </div>
