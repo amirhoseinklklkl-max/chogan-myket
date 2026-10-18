@@ -531,12 +531,26 @@ G.itemIcon=function(cv,type,item){
     } else if(item.kind==='gems'){ 
       ctx.fillStyle='#37b6ff'; ctx.beginPath(); ctx.moveTo(cx,cy-26); ctx.lineTo(cx+23,cy-3); ctx.lineTo(cx,cy+26); ctx.lineTo(cx-23,cy-3); ctx.closePath(); ctx.fill(); 
       ctx.fillStyle='rgba(255,255,255,.5)'; ctx.beginPath(); ctx.moveTo(cx,cy-26); ctx.lineTo(cx+23,cy-3); ctx.lineTo(cx,cy-2); ctx.closePath(); ctx.fill(); 
-    } else if(item.kind==='noads'){
-      ctx.strokeStyle='#8fa8c8'; ctx.lineWidth=4;
-      ctx.beginPath(); ctx.roundRect(cx-22,cy-15,44,30,7); ctx.stroke();
-      ctx.fillStyle='#8fa8c8'; ctx.font='bold 13px Vazirmatn'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('آگهی',cx,cy+1);
-      ctx.strokeStyle='#c8433a'; ctx.lineWidth=5; ctx.lineCap='round';
-      ctx.beginPath(); ctx.moveTo(cx-26,cy+20); ctx.lineTo(cx+26,cy-20); ctx.stroke();
+    } else if(item.kind==='bundle'){
+      // پیشنهاد شگفت‌انگیز: صندوق + سکه + الماس
+      ctx.save(); ctx.translate(cx,cy+4);
+      ctx.fillStyle='#a0662e'; ctx.beginPath(); ctx.roundRect(-24,-6,48,26,5); ctx.fill();
+      ctx.strokeStyle='#6a4418'; ctx.lineWidth=2.5; ctx.stroke();
+      ctx.fillStyle='#c98a3e'; ctx.beginPath(); ctx.roundRect(-27,-14,54,12,4); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#e8b84b'; ctx.fillRect(-4,-14,8,34);
+      ctx.strokeStyle='#6a4418'; ctx.strokeRect(-4,-14,8,34);
+      ctx.fillStyle='#7a5410'; ctx.beginPath(); ctx.arc(0,-1,3.6,0,TAU); ctx.fill();
+      ctx.restore();
+      // الماس و سکه‌های اطراف
+      ctx.fillStyle='#37b6ff'; ctx.beginPath(); ctx.moveTo(cx-26,cy-24); ctx.lineTo(cx-16,cy-15); ctx.lineTo(cx-26,cy-6); ctx.lineTo(cx-36,cy-15); ctx.closePath(); ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.55)'; ctx.beginPath(); ctx.moveTo(cx-26,cy-24); ctx.lineTo(cx-16,cy-15); ctx.lineTo(cx-26,cy-16); ctx.closePath(); ctx.fill();
+      const cg=ctx.createRadialGradient(cx+22,cy-20,1,cx+24,cy-18,10);
+      cg.addColorStop(0,'#ffe9a8'); cg.addColorStop(1,'#b9862a');
+      ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(cx+24,cy-18,9,0,TAU); ctx.fill();
+      ctx.strokeStyle='#7a5410'; ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(cx+24,cy-18,6,0,TAU); ctx.stroke();
+      // درخشش
+      ctx.fillStyle='rgba(255,230,150,.9)';
+      for(const st of [[-34,14],[34,12],[0,-32]]){ ctx.beginPath(); ctx.arc(cx+st[0],cy+st[1],2.4,0,TAU); ctx.fill(); }
     }
   } else if(type==='reward'){
     // جعبهٔ جایزهٔ تبلیغ

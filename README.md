@@ -1,22 +1,30 @@
 # چوگان: میراث پارس — پروژه اندروید
 
-بازی دوبعدی چوگان با بخش داستانی، مسابقه، فروشگاه و خرید درون‌برنامه‌ای.
+بازی دوبعدی چوگان با بخش داستانی ۹ فصلی، ۱۲ مرحله، فروشگاه، **خرید درون‌برنامه‌ای مایکت** و **تبلیغ جایزه‌ای ادیوری**.
+
+- **پکیج‌نیم:** `ir.amir.chogan`
+- **لینک مایکت:** https://myket.ir/app/ir.amir.chogan
 
 ## ساختار پروژه
 
 ```
 ChoganAndroid/
 ├── app/
-│   ├── build.gradle                 تنظیمات ماژول (minSdk 21، targetSdk 34)
+│   ├── build.gradle                      applicationId: ir.amir.chogan + SDK ادیوری
+│   ├── proguard-rules.pro                قوانین keep برای پل JS و IAP
 │   └── src/main/
-│       ├── AndroidManifest.xml      افقی اجباری + تمام‌صفحه + مجوز لرزش
-│       ├── java/com/parsgames/chogan/
-│       │   ├── MainActivity.kt      میزبان WebView بازی (Kotlin)
-│       │   └── IapBridge.java       پل خرید درون‌برنامه‌ای + لرزش (Java)
-│       ├── assets/chogan/           ⭐ کل بازی HTML5 همین‌جاست
-│       └── res/                     آیکون، تم، متن‌ها
-├── build.gradle                     فایل ریشه (AGP 8.5.2، Kotlin 1.9.24)
-└── settings.gradle
+│       ├── AndroidManifest.xml           مجوز BILLING مایکت + <queries>
+│       ├── aidl/com/android/vending/billing/
+│       │   └── IInAppBillingService.aidl سرویس پرداخت (طبق مستندات مایکت)
+│       ├── java/ir/amir/chogan/
+│       │   ├── MainActivity.kt           میزبان WebView + راه‌اندازی ادیوری/مایکت
+│       │   ├── IapBridge.java            پل JS: خرید، تبلیغ، لرزش، لینک‌ها
+│       │   ├── MyketIap.java             مدیر پرداخت مایکت (کلید عمومی + جریان خرید)
+│       │   └── iap/                      کلاس‌های TrivialDrive (IabHelper و…)
+│       ├── assets/chogan/                ⭐ کل بازی HTML5 همین‌جاست
+│       └── res/                          آیکون، تم، متن‌ها
+├── build.gradle                          فایل ریشه (AGP 8.5.2، Kotlin 1.9.24)
+└── settings.gradle                       mavenCentral (برای ادیوری)
 ```
 
 ## ساخت APK — مرحله به مرحله
@@ -24,11 +32,46 @@ ChoganAndroid/
 1. **Android Studio** (نسخه Hedgehog یا جدیدتر با JDK 17) را باز کنید
 2. `File → Open` و پوشه `ChoganAndroid` را انتخاب کنید
 3. صبر کنید تا **Gradle Sync** تمام شود (اینترنت لازم دارد — یک‌بار)
-4. برای تست: دکمه **Run ▶** (با شبیه‌ساز یا گوشی)
+4. برای تست: دکمه **Run ▶** (با شبیه‌ساز یا گوشی — برای خرید واقعی، مایکت باید نصب باشد)
 5. برای خروجی APK: منوی `Build → Build App Bundle(s)/APK(s) → Build APK(s)`
    - مسیر خروجی: `app/build/outputs/apk/debug/app-debug.apk`
 
-> اگر Android Studio نسخه Gradle Wrapper را خواست، خودش آن را می‌سازد؛ یا `File → Sync Project with Gradle Files` را بزنید.
+## تبلیغ جایزه‌ای ادیوری (Adivery)
+
+پیاده‌سازی طبق مستندات رسمی: **docs.adivery.com/android**
+
+- وابستگی: `com.adivery:sdk:4.9.0` (مخزن mavenCentral) + `play-services-ads-identifier`
+- شناسهٔ اپلیکیشن: در `IapBridge.java → ADIVERY_APP_ID`
+- کلید تبلیغ‌گاه جایزه‌ای: `IapBridge.java → ADIVERY_REWARDED_PLACEMENT`
+- جریان کار:
+  1. `Adivery.configure(application, APP_ID)` در onCreate
+  2. `Adivery.prepareRewardedAd(context, placement)` — ادیوری بعد از هر نمایش، تبلیغ بعدی را خودش آماده می‌کند
+  3. بازی → `ChoganAndroid.showRewardedAd()` → اگر `Adivery.isLoaded` → `Adivery.showAd(placement)`
+  4. `AdiveryListener.onRewardedAdClosed(placement, isRewarded)`:
+     - `isRewarded = true` → بازی از طریق `CH.onAdResult(true)` **۱۰۰ سکه** می‌دهد
+     - `isRewarded = false` → بدون جایزه (`CH.onAdResult(false)`)
+- **بدون هیچ محدودیتی**: کاربر می‌تواند پشت‌سرهم تبلیغ ببیند؛ فقط تبلیغِ کاملِ دیده‌شده جایزه دارد.
+
+## خرید درون‌برنامه‌ای مایکت
+
+پیاده‌سازی طبق مستندات رسمی مایکت (نمونهٔ TrivialDrive با سرویس `ir.mservices.market`):
+
+- کلید عمومی برنامه در `MyketIap.java` (تکه‌تکه برای امنیت بیشتر)
+- شناسهٔ محصولات (باید عیناً در پنل مایکت تعریف شده باشند):
+
+| محصول | SKU | مبلغ | جایزه در بازی |
+|---|---|---|---|
+| کیسهٔ سکه | `seke500` | ۵٬۰۰۰ تومان | ۵۰۰ سکه |
+| صندوق سکه | `seke1500` | ۱۰٬۰۰۰ تومان | ۱٬۵۰۰ سکه |
+| خزانهٔ سلطنتی سکه | `seke4000` | ۳۰٬۰۰۰ تومان | ۴٬۰۰۰ سکه |
+| کیسهٔ الماس | `almas15` | ۱۰٬۰۰۰ تومان | ۱۵ الماس |
+| صندوق الماس | `almas35` | ۲۵٬۰۰۰ تومان | ۳۵ الماس |
+| خزانهٔ الماس | `almas80` | ۶۰٬۰۰۰ تومان | ۸۰ الماس |
+| پیشنهاد شگفت‌انگیز | `amazing` | ۸۹٬۰۰۰ تومان | ۱٬۰۰۰ سکه + ۱۰۰ الماس |
+
+- جریان: `ChoganAndroid.purchase(sku)` → `launchPurchaseFlow` → صحت‌سنجی امضا با کلید عمومی → **consume** (چون سکه/الماس مصرف‌شدنی‌اند) → `CH.onIapResult(sku, true)` → بازی آیتم را اهدا می‌کند
+- خریدهای نیمه‌کارهٔ قبلی (مثلاً بعد از کرش) هنگام شروع بازی به‌طور خودکار استعلام، مصرف و اهدا می‌شوند
+- «ثبت نظر در مایکت» (پایان داستان): intent رسمی `myket://comment?id=ir.amir.chogan`
 
 ## به‌روزرسانی بازی (نسخه وب → اندروید)
 
@@ -50,18 +93,6 @@ app/src/main/assets/chogan/
 2. فایل‌ها را بگذارید در:
    `app/src/main/assets/chogan/audio/vo/<شناسه‌خط>.ogg`
 3. برای افکت‌های صوتی ضبط‌شده: فایل‌ها در `assets/chogan/audio/sfx/` + فعال‌سازی نام‌ها در `js/audio-files.js`
-
-## اتصال خرید درون‌برنامه‌ای واقعی (بعداً)
-
-الان دکمه‌های «خرید الماس» در حالت **آزمایشی** کار می‌کنند (رایگان می‌دهد).
-برای فعال‌سازی پرداخت واقعی فقط یک جا باید کد بزنید:
-
-- فایل: `app/src/main/java/com/parsgames/chogan/IapBridge.java`
-- داخل متد `purchase()` جریان واقعی Billing را صدا بزنید (کافه‌بازار / مایکت / گوگل‌پلی)
-- شناسه‌های آماده در بازی: `iap_coin_1`، `iap_coin_2`، `iap_gem_1`، `iap_gem_2`، `iap_noads`
-- فهرست کامل با قیمت‌ها: `assets/chogan/js/story-data.js` → بخش `CH.SHOP.iap`
-
-پل جاوااسکریپت از طرف بازی از قبل آماده است: `window.ChoganAndroid.purchase(sku)`
 
 ## تنظیمات مهم بازی (همه در بازی هست)
 

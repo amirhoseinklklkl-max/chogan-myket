@@ -21,10 +21,11 @@ M.start=function(cfg){
     pow:(mallet?mallet.pow:1),
     acc:(mallet?mallet.acc:1)
   };
-  const nPer=(cfg.small===2)?2:3;
+  const nPer=(cfg.small===2)?2:3;   // تعداد بازیکنان زمینی هر تیم
+  M.nField=nPer;                     // ایندکس دروازه‌بان = nPer (هر تیم یک دروازه‌بان دارد)
   M.riders=[];
   // تیم ما (a) سمت چپ — به دروازه راست حمله
-  const myNames=['me','amir','golnar'];
+  const myNames=['me','امیر','گلنار','بردیا'];
   const pool=CH.SHOP.horses;
   for(let i=0;i<nPer;i++){
     // بازیکن اول با اسبِ خودت — بقیه با اسب‌های متنوع
@@ -32,11 +33,14 @@ M.start=function(cfg){
     M.riders.push(M.mkRider('a',i,nPer,{spd:M.stats.spd,stam:M.stats.stam,pow:M.stats.pow,acc:M.stats.acc},myNames[i],h));
   }
   const diff=cfg.diff||0.7;
-  const enNames=['حریف ۱','حریف ۲','حریف ۳'];
+  const enNames=['حریف ۱','حریف ۲','حریف ۳','نگهبانِ حریف'];
   for(let i=0;i<nPer;i++){
     M.riders.push(M.mkRider('b',i,nPer,{spd:U.clamp(0.86*diff,0.7,1.15),stam:0.9,pow:U.clamp(0.9*diff,0.75,1.15),acc:U.clamp(0.85*diff,0.6,1.1)},enNames[i],pool[U.randi(0,pool.length-1)]));
   }
-  M.ctl=0; // ایندکس بازیکن کنترلی تیم a
+  // دروازه‌بان‌ها — همیشه مستقل و هوشمند
+  M.riders.push(M.mkRider('a',nPer,nPer,{spd:1.0,stam:1.1,pow:0.9,acc:0.8},'نگهبان ما',null));
+  M.riders.push(M.mkRider('b',nPer,nPer,{spd:U.clamp(1.0*diff,0.85,1.18),stam:1.1,pow:0.9,acc:0.8},'نگهبانِ حریف',null));
+  M.ctl=0; // همیشه اسبِ خودت — هیچ‌وقت بین اسب‌ها سوییچ نمی‌کنی
   M.resetPositions(true);
   CH.audio.play('whistle');
   CH.ui.matchHud(true,cfg);
@@ -57,8 +61,8 @@ M.mkRider=function(team,i,n,stats,name,horse){
 M.home=function(r){
   const dir=(r.team==='a'?-1:1);
   const colX=dir*FW*0.18, colX2=dir*FW*0.34;
-  const colY=[0,-160,160,0][r.i]||0;
-  if(r.role==='keeper')r.x=dir*FW*0.42, r.y=0;
+  const colY=[0,-160,160][r.i]||0;
+  if(r.i>=M.nField)r.x=dir*FW*0.42, r.y=0;
   else if(r.i===0)r.x=colX, r.y=colY;
   else r.x=colX2, r.y=colY*0.6+((r.i%2)?120:-120);
   r.vx=r.vy=0;
@@ -68,7 +72,7 @@ M.home=function(r){
 M.resetPositions=function(full){
   M.ball={x:0,y:0,vx:0,vy:0};
   M.trail.length=0;
-  for(const r of M.riders){ r.role=r.i===2?'keeper':'attack'; M.home(r); }
+  for(const r of M.riders){ r.role=(r.i>=M.nField)?'keeper':'attack'; M.home(r); }
   if(full){ M.ctl=0; }
 };
 
@@ -97,10 +101,10 @@ M.aiControl=function(r,dt){
   if(r.aiT<=0){
     r.aiT=U.rand(.25,.5);
     // تعیین نقش
-    const mates=M.riders.filter(o=>o.team===r.team);
+    const mates=M.riders.filter(o=>o.team===r.team&&o.i<M.nField);
     const sorted=mates.slice().sort((a,b)=>U.dist2(a)-U.dist2(b));
     const closest=sorted[0]===r;
-    r.role=(r.i===2)?'keeper':(closest?'attack':'support');
+    r.role=(r.i>=M.nField)?'keeper':(closest?'attack':'support');
   }
   const goalX=(r.team==='a'?FW/2:-FW/2);
   const ownGoalX=(r.team==='a'?-FW/2:FW/2);
@@ -109,8 +113,27 @@ M.aiControl=function(r,dt){
   const skill=M.cfg.diff||0.7;
 
   if(r.role==='keeper'){
-    tx=ownGoalX*0.93; ty=U.clamp(b.y*0.7,-GOAL_W*0.7,GOAL_W*0.7);
-    if(Math.abs(b.x-ownGoalX)<220&&Math.abs(b.y)<GOAL_W){ tx=ownGoalX+Math.sign(-ownGoalX)*30; ty=b.y; }
+    /* دروازه‌بان هوشمند: پیش‌بینی مسیر توپ + خروجِ به‌موقع */
+    const glx=ownGoalX+(r.team==='a'?30:-30);          // کمی جلوتر از خط دروازه
+    const distBall=Math.abs(b.x-ownGoalX);
+    let iy=b.y*0.8;                                    // حالت عادی: دنبال توپ
+    const toward=(r.team==='a'&&b.vx<-40)||(r.team==='b'&&b.vx>40);
+    if(toward&&Math.abs(b.vx)>1){
+      // پیش‌بینی نقطه‌ی برخورد توپ با خط دروازه
+      const tHit=(glx-b.x)/b.vx;
+      if(tHit>0&&tHit<2.4) iy=b.y+b.vy*tHit*0.92;
+    }
+    if(distBall<430&&Math.abs(b.y)<GOAL_W*1.5){
+      // خروج به سمت توپ و هجوم
+      const out=U.clamp(150-distBall*0.25,14,110);
+      tx=ownGoalX+Math.sign(-ownGoalX)*out;
+      ty=U.clamp(b.y,-GOAL_W*0.8,GOAL_W*0.8);
+      sprint=true;
+    } else {
+      tx=glx;
+      ty=U.clamp(iy,-GOAL_W*0.58,GOAL_W*0.58);
+      sprint=Math.abs(ty-r.y)>60;
+    }
   } else if(r.role==='attack'){
     const pred=0.25;
     tx=b.x+b.vx*pred; ty=b.y+b.vy*pred;
@@ -135,7 +158,9 @@ M.aiControl=function(r,dt){
   }
   const dx=tx-r.x, dy=ty-r.y, d=Math.hypot(dx,dy)||1;
   let sp=250*st.spd*(sprint?1.35:1)*U.clamp(skill,0.6,1.1);
-  if(d<26)sp*=0.3;
+  if(r.role==='keeper')sp*=1.12;               // دروازه‌بان چابک‌تر است
+  if(r.role==='keeper'){ if(d<18)sp*=0.3; }
+  else if(d<26)sp*=0.3;
   r.vx=U.lerp(r.vx,dx/d*sp,1-Math.exp(-5*dt));
   r.vy=U.lerp(r.vy,dy/d*sp,1-Math.exp(-5*dt));
   if(Math.hypot(r.vx,r.vy)>20){
@@ -184,9 +209,29 @@ M.physics=function(dt){
   // برخورد سوار-توپ (دریبل)
   for(const r of M.riders){
     const d=U.dist(r.x,r.y,b.x,b.y);
-    if(d<30){
+    const isK=(r.role==='keeper');
+    const reach=isK?38:30;
+    if(d<reach){
       const bs=Math.hypot(b.vx,b.vy);
-      if(bs<r.speed*1.15+40){
+      const towardOwn=(r.team==='a'&&b.vx<-60)||(r.team==='b'&&b.vx>60);
+      if(isK&&bs>=120&&towardOwn){
+        // توپِ سریع در حال ورود به دروازه — فقط دفعِ احتمالاتی (نه مهار قطعی):
+        // شوت محکم و به گوشه = شانس گل بیشتر؛ توپ وسط و آرام = دفع بیشتر
+        if(r.cool<=0){
+          r.cool=0.9;
+          const catchChance=U.clamp(1.3-bs/640,0.12,0.92);
+          if(Math.random()<catchChance){
+            const away=(r.team==='a')?1:-1;
+            const power=U.clamp(bs*0.72,330,540);
+            const ay=U.rand(-0.5,0.5);
+            b.vx=Math.cos(ay)*power*away;
+            b.vy=Math.sin(ay)*power;
+            CH.audio.play('hitWall');
+            CH.fx.burst(b.x,b.y,'#d8e8ff',8);
+          }
+        }
+      } else if(bs<r.speed*1.15+40){
+        // دریبل عادی / مهار توپ آرام
         b.vx=r.vx*1.12+Math.cos(r.ang)*40;
         b.vy=r.vy*1.12+Math.sin(r.ang)*40;
       }
@@ -261,15 +306,7 @@ M.update=function(dt){
   for(const r of M.riders){
     if(r.team==='a'&&M.riders.indexOf(r)===M.ctl)r.controlled=true; else r.controlled=false;
   }
-  // تعویض خودکار
-  if(M.phase!=='goal'){
-    let best=M.ctl,bd=U.dist(M.riders[M.ctl].x,M.riders[M.ctl].y,b.x,b.y);
-    for(let i=0;i<M.riders.length;i++){ const r=M.riders[i]; if(r.team!=='a')continue;
-      const d=U.dist(r.x,r.y,b.x,b.y);
-      if(d+70<bd){bd=d;best=i;}
-    }
-    M.ctl=best;
-  }
+  /* بدون تعویض خودکار — بازیکن همیشه فقط اسبِ خودش را کنترل می‌کند (M.ctl=0) */
   for(const r of M.riders){
     if(r.controlled&&M.phase!=='goal')M.playerControl(r,dt);
     else M.aiControl(r,dt);

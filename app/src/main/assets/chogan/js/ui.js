@@ -297,7 +297,7 @@ UI.renderShop=function(){
       grid.appendChild(card);
     }
   } else if(tab==='iap'){
-    // کارت تبلیغ جایزه‌دار — تماشای تبلیغ، گرفتن سکه
+    // کارت تبلیغ جایزه‌دار — تماشای تبلیغ، گرفتن سکه (بدون هیچ محدودیتی)
     const adCard=document.createElement('div');
     adCard.className='shop-card ad-card';
     const aic=document.createElement('div'); aic.className='ad-ic';
@@ -305,7 +305,7 @@ UI.renderShop=function(){
     aic.appendChild(acv); adCard.appendChild(aic);
     CH.G.itemIcon(acv,'reward',{});
     const atx=document.createElement('div'); atx.className='ad-txt';
-    atx.innerHTML='<div class="shop-name">تبلیغ جایزه‌دار 🎁</div><div class="ad-desc">یک آگهی کوتاه ببین و ۱۰۰ سکه بگیر — هر ۳ دقیقه یک‌بار!</div>';
+    atx.innerHTML='<div class="shop-name">تبلیغ جایزه‌دار 🎁</div><div class="ad-desc">آگهی را تا آخر ببین و ۱۰۰ سکه بگیر — هر وقت بخواهی، حتی پشت‌سرهم!</div>';
     adCard.appendChild(atx);
     const abtn=document.createElement('button');
     abtn.className='shop-buy buy';
@@ -315,7 +315,7 @@ UI.renderShop=function(){
     grid.appendChild(adCard);
     for(const it of CH.SHOP.iap){
       const card=document.createElement('div');
-      card.className='shop-card';
+      card.className='shop-card'+(it.best?' best':'')+(it.amazing?' amazing':'');
       const th=document.createElement('div'); th.className='shop-thumb';
       const cv=document.createElement('canvas'); cv.width=120; cv.height=86;
       th.appendChild(cv); card.appendChild(th);
@@ -324,26 +324,32 @@ UI.renderShop=function(){
       const ds=document.createElement('div'); ds.className='hint'; ds.style.textAlign='center'; ds.textContent=it.desc; card.appendChild(ds);
       const btn=document.createElement('button');
       btn.className='shop-buy buy gem demo';
-      btn.textContent=it.priceLabel+' — خرید آزمایشی';
+      btn.textContent=it.priceLabel+(CH.isAndroid?' — خرید':' — آزمایشی');
       btn.onclick=()=>UI.iapBuy(it);
       card.appendChild(btn);
       grid.appendChild(card);
     }
     const note=document.createElement('p');
     note.className='hint'; note.style.gridColumn='1/-1'; note.style.textAlign='center';
-    note.textContent='⚡ خرید درون‌برنامه‌ای در نسخهٔ اندروید پس از اتصال درگاه پرداخت (بازار/پلی) فعال می‌شود — فعلاً حالت آزمایشی است و آیتم‌ها را رایگان می‌دهد. تبلیغ جایزه‌دار هم فعلاً شبیه‌سازی شده است.';
+    note.textContent=(CH.isAndroid
+      ?'⚡ پرداخت با مایکت انجام می‌شود — سکه‌ها و الماس‌ها بلافاصله بعد از پرداخت اضافه می‌شوند. تبلیغ جایزه‌دار با ادیوری است.'
+      :'⚡ حالت آزمایشی وب — خرید واقعی در نسخهٔ اندروید (مایکت) فعال است. تبلیغ جایزه‌دار در اندروید با ادیوری اجرا می‌شود.');
     grid.appendChild(note);
   }
 };
 
-/* ---------- تبلیغ جایزه‌دار ---------- */
+/* ---------- تبلیغ جایزه‌دار (اندروید: ادیوری — وب: شبیه‌سازی) ---------- */
+/* هیچ محدودیتی وجود ندارد؛ کاربر می‌تواند پشت‌سرهم تبلیغ ببیند.
+   فقط اگر تبلیغ تا آخر دیده شود ۱۰۰ سکه داده می‌شود. */
 UI.adBusy=false; UI._adIv=null;
 UI.rewardedAd=function(){
   if(UI.adBusy)return;
-  const s=CH.save.d;
-  const left=Math.ceil((180000-(Date.now()-(s.adT||0)))/1000);
-  if(left>0){ CH.toast('هر ۳ دقیقه یک‌بار! ('+U.toFa(left)+' ثانیه دیگر)'); CH.audio.play('fail'); return; }
   UI.adBusy=true;
+  // اندروید: تبلیغ واقعی ادیوری — نتیجه از طریق CH.onAdResult برمی‌گردد
+  if(CH.isAndroid&&CH.bridge&&CH.bridge.showRewardedAd){
+    try{ CH.bridge.showRewardedAd(); return; }catch(e){ UI.adBusy=false; }
+  }
+  // وب: شبیه‌سازی ۵ ثانیه‌ای
   UI.showModal('ad-modal');
   document.getElementById('ad-reward').classList.add('hidden');
   document.getElementById('ad-cancel').classList.remove('hidden');
@@ -364,7 +370,7 @@ UI.rewardedAd=function(){
 UI.adGrant=function(){
   clearInterval(UI._adIv); UI._adIv=null;
   UI.hideModal('ad-modal'); UI.adBusy=false;
-  CH.save.d.coins+=100; CH.save.d.adT=Date.now(); CH.save.write();
+  CH.save.d.coins+=100; CH.save.write();
   UI.refreshCoins(); CH.audio.play('coin'); CH.fx.confetti(40);
   CH.toast('+۱۰۰ سکه از تبلیغ جایزه‌دار!');
 };
@@ -372,6 +378,13 @@ UI.adCancel=function(){
   clearInterval(UI._adIv); UI._adIv=null;
   UI.hideModal('ad-modal'); UI.adBusy=false;
   CH.audio.play('click');
+};
+/* نتیجه‌ی تبلیغ ادیوری از سمت اندروید (evaluateJavascript) صدا زده می‌شود */
+CH.onAdResult=function(ok){
+  UI.adBusy=false;
+  if(ok===true){ UI.adGrant(); }
+  else if(ok==='unavailable'){ CH.toast('تبلیغ هنوز آماده نیست — چند لحظهٔ دیگر دوباره امتحان کن'); CH.audio.play('fail'); }
+  else { CH.toast('تبلیغ تا آخر دیده نشد — جایزه‌ای تعلق نگرفت'); CH.audio.play('fail'); }
 };
 
 UI.buyItem=function(it,eqKey){
@@ -390,22 +403,59 @@ UI.buyItem=function(it,eqKey){
   });
 };
 
-/* خرید درون‌برنامه‌ای (آزمایشی — آماده اتصال به درگاه) */
+/* ---------- خرید درون‌برنامه‌ای مایکت ---------- */
 UI.iapBuy=function(it){
-  CH.confirm('خرید درون‌برنامه‌ای',it.name+' — '+it.priceLabel+(CH.isAndroid?' (پرداخت واقعی)':' (حالت آزمایشی)'),()=>{
-    const grant=()=>{
-      if(it.kind==='coins'){ CH.save.d.coins+=it.amount; CH.audio.play('coin'); }
-      else if(it.kind==='gems'){ CH.save.d.gems+=it.amount; CH.audio.play('gem'); }
-      else if(it.kind==='noads'){ CH.toast('تبلیغات حذف شد (آزمایشی)'); }
-      if(it.bonus&&!CH.save.d.owned.outfits.includes(it.bonus)){ CH.save.d.owned.outfits.push(it.bonus); }
-      CH.save.write(); UI.refreshCoins();
-      CH.toast('✓ '+it.name+' اهدا شد'+(CH.isAndroid?'':' (آزمایشی)'));
-    };
-    if(CH.bridge&&CH.bridge.purchase){
-      try{ CH.bridge.purchase(it.id); }catch(e){}
-      grant();
-    } else grant();
+  // اندروید: جریان واقعی پرداخت مایکت — اهدای آیتم بعد از تأیید خرید از سمت پل (CH.onIapResult)
+  if(CH.isAndroid&&CH.bridge&&CH.bridge.purchase){
+    CH.confirm('خرید از مایکت',it.name+' — '+it.priceLabel+' پرداخت می‌شود. ادامه می‌دهی؟',()=>{
+      try{ CH.bridge.purchase(it.sku||it.id); }catch(e){ CH.toast('خطا در شروع پرداخت!'); }
+    });
+    return;
+  }
+  // وب (بدون پل): حالت آزمایشی
+  CH.confirm('خرید درون‌برنامه‌ای (آزمایشی)',it.name+' — '+it.priceLabel,()=>{
+    UI.grantIap(it);
+    CH.toast('✓ '+it.name+' اهدا شد (آزمایشی)');
   });
+};
+UI.grantIap=function(it){
+  if(!it)return;
+  if(it.kind==='coins'){ CH.save.d.coins+=it.amount; CH.audio.play('coin'); }
+  else if(it.kind==='gems'){ CH.save.d.gems+=it.amount; CH.audio.play('gem'); }
+  else if(it.kind==='bundle'){
+    CH.save.d.coins+=it.coins||0; CH.save.d.gems+=it.amount||0;
+    CH.audio.play('gem'); CH.fx.confetti(60);
+  }
+  CH.save.write(); UI.refreshCoins();
+};
+/* نتیجه‌ی خرید مایکت از سمت اندروید (evaluateJavascript): sku و موفقیت */
+CH.onIapResult=function(sku,ok){
+  const it=CH.SHOP.iap.find(x=>(x.sku||x.id)===sku);
+  if(!ok){ CH.toast('خرید انجام نشد یا لغو شد'); CH.audio.play('fail'); return; }
+  if(!it){ CH.toast('آیتم یافت نشد: '+sku); return; }
+  UI.grantIap(it);
+  CH.toast('✓ '+it.name+' اهدا شد!');
+};
+
+/* ---------- مودال نظر در مایکت (پایان داستان) ---------- */
+UI.showMyketReview=function(){
+  UI.showModal('myket-modal');
+  CH.audio.play('quest');
+  const go=document.getElementById('myket-go');
+  const later=document.getElementById('myket-later');
+  go.onclick=()=>{
+    CH.audio.play('click');
+    UI.hideModal('myket-modal');
+    const url='https://myket.ir/app/ir.amir.chogan';
+    if(CH.isAndroid&&CH.bridge&&CH.bridge.openMyket){
+      try{ CH.bridge.openMyket('ir.amir.chogan'); return; }catch(e){}
+    }
+    if(CH.isAndroid&&CH.bridge&&CH.bridge.openUrl){
+      try{ CH.bridge.openUrl(url); return; }catch(e){}
+    }
+    try{ window.open(url,'_blank'); }catch(e){}
+  };
+  later.onclick=()=>{ CH.audio.play('click'); UI.hideModal('myket-modal'); };
 };
 
 /* ================= اتصال منوها ================= */
@@ -495,7 +545,6 @@ UI.bind=function(){
   $('ad-reward').onclick=()=>{ UI.adGrant(); };
   $('ad-cancel').onclick=()=>{ UI.adCancel(); };
 };
-
 /* ================= تنظیمات sync ================= */
 UI.syncSettings=function(){
   const s=CH.save.d.set;

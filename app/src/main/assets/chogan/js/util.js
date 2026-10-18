@@ -38,6 +38,11 @@ CH.save={
       for(const k of ['owned','equipped','story','arcade','set','stats']){
         this.d[k]=Object.assign({},def[k],this.d[k]||{});
       }
+      // مهاجرت: داستان از ۷ فصل به ۹ فصل رسید (فینال از ایندکس ۶ به ۸)
+      if(!this.d.story.mig9){
+        if(!this.d.story.done&&this.d.story.ch>=6){ this.d.story.ch+=2; this.d.story.step=0; }
+        this.d.story.mig9=true; this.write();
+      }
     }catch(e){ this.d=this.defaults(); }
     return this.d;
   },

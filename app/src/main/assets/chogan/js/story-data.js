@@ -25,12 +25,12 @@ CH.CHARS={
 /* ---------- جامه‌ها (رنگ لباس و اسب) ---------- */
 CH.OUTFITS={
   rustic:  {name:'جامه دهقانی', robe:'#7a6a4a', belt:'#4a3a24', hat:'#5a4632', bard:'#8a7a5a', price:0, gem:false, desc:'ساده و راحت، بوی نون تنوری می‌ده'},
-  turkman: {name:'جامه ترکمن', robe:'#8a3a3a', belt:'#3a1a1a', hat:'#4a2a2a', bard:'#a04a3a', price:250, gem:false, desc:'سرخ‌پوشِ تاخت‌زن‌های ترکمن'},
-  shirazi: {name:'جامه شیرازی', robe:'#c25a7a', belt:'#5a2a3a', hat:'#8a3a5a', bard:'#c25a7a', price:450, gem:false, desc:'به گلابِ شیراز آغشته است'},
-  esfahani:{name:'جامه اصفهانی', robe:'#1ba894', belt:'#e8b84b', hat:'#0e6e60', bard:'#1c7a6e', price:700, gem:false, desc:'طرح کاشی‌های مسجد شیخ لطف‌الله'},
-  shabgard:{name:'جامه شب‌گرد', robe:'#23283e', belt:'#8a94a8', hat:'#14182a', bard:'#2a3350', price:1000, gem:false, desc:'آرام مثل شب، تند مثل باد'},
-  kashani: {name:'جامه کاشان', robe:'#b8862a', belt:'#7a5514', hat:'#6a4a1a', bard:'#caa84f', price:1400, gem:false, desc:'عطر گلاب و مسقطیِ کاشان'},
-  pahlavani:{name:'جامه پهلوانی', robe:'#8a2a2a', belt:'#3a3a44', hat:'#2a2a32', bard:'#8a2a2a', price:2800, gem:false, desc:'جامهٔ آجری میدان‌های پهلوانی'},
+  turkman: {name:'جامه ترکمن', robe:'#8a3a3a', belt:'#3a1a1a', hat:'#4a2a2a', bard:'#a04a3a', price:400, gem:false, desc:'سرخ‌پوشِ تاخت‌زن‌های ترکمن'},
+  shirazi: {name:'جامه شیرازی', robe:'#c25a7a', belt:'#5a2a3a', hat:'#8a3a5a', bard:'#c25a7a', price:750, gem:false, desc:'به گلابِ شیراز آغشته است'},
+  esfahani:{name:'جامه اصفهانی', robe:'#1ba894', belt:'#e8b84b', hat:'#0e6e60', bard:'#1c7a6e', price:1150, gem:false, desc:'طرح کاشی‌های مسجد شیخ لطف‌الله'},
+  shabgard:{name:'جامه شب‌گرد', robe:'#23283e', belt:'#8a94a8', hat:'#14182a', bard:'#2a3350', price:1650, gem:false, desc:'آرام مثل شب، تند مثل باد'},
+  kashani: {name:'جامه کاشان', robe:'#b8862a', belt:'#7a5514', hat:'#6a4a1a', bard:'#caa84f', price:2300, gem:false, desc:'عطر گلاب و مسقطیِ کاشان'},
+  pahlavani:{name:'جامه پهلوانی', robe:'#8a2a2a', belt:'#3a3a44', hat:'#2a2a32', bard:'#8a2a2a', price:4600, gem:false, desc:'جامهٔ آجری میدان‌های پهلوانی'},
   firouzeh:{name:'جامه فیروزه', robe:'#18b8a0', belt:'#e8b84b', hat:'#0e6e60', bard:'#1e9fd8', price:32, gem:true, desc:'فیروزهٔ نیشابور بر سینه'},
   royal:   {name:'جامه سلطنتی', robe:'#1c3a6e', belt:'#e8b84b', hat:'#caa84f', bard:'#caa84f', price:20, gem:true, desc:'جامه دربار شاه عباس، طلودوزی‌شده'},
   mehromah:{name:'جامه مهر و ماه', robe:'#5a3a8a', belt:'#e8b84b', hat:'#caa84f', bard:'#8a5ab8', price:50, gem:true, desc:'مهر بر سینه، ماه بر کلاه'}
@@ -40,53 +40,57 @@ CH.OUTFITS={
 CH.SHOP={
   mallets:[
     {id:'chobi_kohan', name:'چوب کهن پدربزرگ', price:0, gem:false, pow:1.0, acc:1.0, col:'#5f3d1e', desc:'همان چوب کهنه با نقطه‌های لکه‌های چراغ'},
-    {id:'chobi_tut',   name:'چوب توتِ کهک', price:300, gem:false, pow:1.06, acc:1.08, col:'#8a6a4a', desc:'سبک و خوش‌دست، مال روزهای اول'},
-    {id:'chobi_bid',   name:'چوب بیدِ زرنگار', price:550, gem:false, pow:1.1, acc:1.18, col:'#6a5a3a', desc:'سبک و فرم‌گرفته، دوستِ مچ دست'},
-    {id:'chobi_narvan', name:'چوب نارونِ دشت', price:800, gem:false, pow:1.16, acc:1.08, col:'#a05a2a', desc:'کوبنده مثل باران بهشت‌باران'},
-    {id:'chobi_shamshad', name:'چوب شمشاد کمان‌کش', price:1100, gem:false, pow:1.22, acc:1.12, col:'#7a5a2a', desc:'سفت و کوبنده، مثل دستِ پهلوان'},
-    {id:'chobi_ars',   name:'چوب ارسِ کوهسار', price:1600, gem:false, pow:1.26, acc:1.2, col:'#5a4a3a', desc:'از ارسِ کوهسار تراشیده‌شده، خنک و استوار'},
-    {id:'chobi_pahlavan', name:'چوب پهلوانی رستم', price:2600, gem:false, pow:1.38, acc:1.15, col:'#4a3a5a', desc:'به سنگینی ضربهٔ رستم، به روشنی نامش'},
+    {id:'chobi_tut',   name:'چوب توتِ کهک', price:480, gem:false, pow:1.06, acc:1.08, col:'#8a6a4a', desc:'سبک و خوش‌دست، مال روزهای اول'},
+    {id:'chobi_bid',   name:'چوب بیدِ زرنگار', price:850, gem:false, pow:1.1, acc:1.18, col:'#6a5a3a', desc:'سبک و فرم‌گرفته، دوستِ مچ دست'},
+    {id:'chobi_narvan', name:'چوب نارونِ دشت', price:1300, gem:false, pow:1.16, acc:1.08, col:'#a05a2a', desc:'کوبنده مثل باران بهشت‌باران'},
+    {id:'chobi_shamshad', name:'چوب شمشاد کمان‌کش', price:1850, gem:false, pow:1.22, acc:1.12, col:'#7a5a2a', desc:'سفت و کوبنده، مثل دستِ پهلوان'},
+    {id:'chobi_ars',   name:'چوب ارسِ کوهسار', price:2700, gem:false, pow:1.26, acc:1.2, col:'#5a4a3a', desc:'از ارسِ کوهسار تراشیده‌شده، خنک و استوار'},
+    {id:'chobi_pahlavan', name:'چوب پهلوانی رستم', price:4300, gem:false, pow:1.38, acc:1.15, col:'#4a3a5a', desc:'به سنگینی ضربهٔ رستم، به روشنی نامش'},
     {id:'chobi_mina',  name:'چوب میناکاری', price:28, gem:true, pow:1.2, acc:1.42, col:'#1e9fd8', desc:'دستهٔ میناکاری — چشمِ بازِ میدان'},
     {id:'chobi_zarrin', name:'چوب زرین پارس', price:25, gem:true, pow:1.32, acc:1.28, col:'#caa84f', gold:true, desc:'دستهٔ عاج، نقره‌کوبِ اصفهان'},
     {id:'chobi_tus',   name:'چوب شاهانهٔ طوس', price:55, gem:true, pow:1.45, acc:1.35, col:'#e8b84b', gold:true, desc:'چوب درباریان طوس با پوملِ یاقوت — سلطانِ چوب‌ها'}
   ],
   horses:[
-    {id:'badba',    name:'بادبه', price:300, gem:false, spd:1.0, stam:1.0, coat:'#7a5233', bard:'#8a7a5a', mane:'#3c2717', size:1.0, desc:'اسب پیر و باوفای تهمینه'},
-    {id:'ghazal',   name:'غزال شتردوان', price:900, gem:false, spd:1.24, stam:0.92, coat:'#c49a6c', bard:'#a0845a', mane:'#8a6a4a', size:0.94, desc:'چابک‌ترین اسب دشت — ولی زود خسته می‌شه'},
-    {id:'shabdiv',  name:'شبدیز', price:1400, gem:false, spd:1.18, stam:1.08, coat:'#2e2420', bard:'#4a3a3a', mane:'#15100c', size:1.05, desc:'سیال مثل شب، تند مثل باد'},
-    {id:'yamut',    name:'یاموت ترکمن', price:1900, gem:false, spd:1.2, stam:1.16, coat:'#a0522d', bard:'#a04a3a', mane:'#3a1f10', size:1.02, desc:'یراق‌آلوی ترکمن، پُرعزم و سترگ'},
-    {id:'rakhsh',   name:'رخش کُهر', price:2500, gem:false, spd:1.08, stam:1.34, coat:'#9a7a5a', bard:'#6a4a2a', mane:'#4a3423', size:1.12, desc:'کُهرِ استوار و تنومند، هیچ‌وقت خسته نمی‌شه'},
-    {id:'baragh',   name:'براق سپید', price:3400, gem:false, spd:1.22, stam:1.2, coat:'#e8e2d4', bard:'#b8b0a0', mane:'#cfc7b4', size:1.04, blaze:'#fff', desc:'سپیدَمِ میدان با شبلِ نقره‌ای'},
-    {id:'azarakhsh', name:'آذرخش', price:4400, gem:false, spd:1.32, stam:1.12, coat:'#46315e', bard:'#2a1c3e', mane:'#1a1030', size:1.06, blaze:'#e8b84b', desc:'سیاه‌بادگانی با شبل زرین — برقِ چشم‌ها را می‌دزدد'},
+    {id:'badba',    name:'بادبه', price:450, gem:false, spd:1.0, stam:1.0, coat:'#7a5233', bard:'#8a7a5a', mane:'#3c2717', size:1.0, desc:'اسب پیر و باوفای تهمینه'},
+    {id:'ghazal',   name:'غزال شتردوان', price:1400, gem:false, spd:1.24, stam:0.92, coat:'#c49a6c', bard:'#a0845a', mane:'#8a6a4a', size:0.94, desc:'چابک‌ترین اسب دشت — ولی زود خسته می‌شه'},
+    {id:'shabdiv',  name:'شبدیز', price:2200, gem:false, spd:1.18, stam:1.08, coat:'#2e2420', bard:'#4a3a3a', mane:'#15100c', size:1.05, desc:'سیال مثل شب، تند مثل باد'},
+    {id:'yamut',    name:'یاموت ترکمن', price:3100, gem:false, spd:1.2, stam:1.16, coat:'#a0522d', bard:'#a04a3a', mane:'#3a1f10', size:1.02, desc:'یراق‌آلوی ترکمن، پُرعزم و سترگ'},
+    {id:'rakhsh',   name:'رخش کُهر', price:4200, gem:false, spd:1.08, stam:1.34, coat:'#9a7a5a', bard:'#6a4a2a', mane:'#4a3423', size:1.12, desc:'کُهرِ استوار و تنومند، هیچ‌وقت خسته نمی‌شه'},
+    {id:'baragh',   name:'براق سپید', price:5600, gem:false, spd:1.22, stam:1.2, coat:'#e8e2d4', bard:'#b8b0a0', mane:'#cfc7b4', size:1.04, blaze:'#fff', desc:'سپیدَمِ میدان با شبلِ نقره‌ای'},
+    {id:'azarakhsh', name:'آذرخش', price:7200, gem:false, spd:1.32, stam:1.12, coat:'#46315e', bard:'#2a1c3e', mane:'#1a1030', size:1.06, blaze:'#e8b84b', desc:'سیاه‌بادگانی با شبل زرین — برقِ چشم‌ها را می‌دزدد'},
     {id:'mahtab',   name:'مهتاب‌دوان', price:38, gem:true, spd:1.28, stam:1.22, coat:'#b8c4d8', bard:'#8a94a8', mane:'#8a94a8', size:1.03, blaze:'#fff', socks:'#e8eef8', desc:'نقره‌فام مثل شب مهتابی، با پاهای سپید'},
     {id:'simorgh',  name:'سیمرغ آتش‌پر', price:46, gem:true, spd:1.3, stam:1.28, coat:'#b8502a', bard:'#e8b84b', mane:'#5a1c0c', size:1.06, spots:'#e8b84b', desc:'افسانهٔ میدان با لکه‌های آتشین، اسبِ قهرمان‌ها'},
     {id:'parnian',  name:'پرنیان زرین', price:60, gem:true, spd:1.34, stam:1.3, coat:'#d8b040', bard:'#fff2c8', mane:'#8a6a14', size:1.05, spots:'#fff6d8', blaze:'#fff6d8', desc:'زرین‌پوشِ افسانه‌ای — آرزوی هر چوگان‌بازی'}
   ],
   outfits:CH.OUTFITS,
   iap:[
-    {id:'iap_coin_1', name:'کیسهٔ سکه', kind:'coins', amount:500, priceLabel:'۹۹ هزار تومان', desc:'۵۰۰ سکهٔ طلایی برای تجهیزات'},
-    {id:'iap_coin_2', name:'صندوق سکه', kind:'coins', amount:1500, priceLabel:'۲۴۹ هزار تومان', desc:'۱۵۰۰ سکه — بهترین ارزش', best:true},
-    {id:'iap_coin_3', name:'خزانهٔ سلطنتی سکه', kind:'coins', amount:4000, priceLabel:'۴۹۹ هزار تومان', desc:'۴۰۰۰ سکه — برای سلطان‌های میدان'},
-    {id:'iap_gem_1',  name:'کیسهٔ الماس', kind:'gems', amount:10, priceLabel:'۱۴۹ هزار تومان', desc:'۱۰ الماس گران‌بها'},
-    {id:'iap_gem_2',  name:'صندوق الماس', kind:'gems', amount:35, priceLabel:'۴۴۹ هزار تومان', desc:'۳۵ الماس + هدیهٔ جامهٔ سلطنتی', bonus:'royal'},
-    {id:'iap_gem_3',  name:'خزانهٔ الماس', kind:'gems', amount:80, priceLabel:'۷۹۹ هزار تومان', desc:'۸۰ الماس + هدیهٔ چوب شاهانهٔ طوس', bonus:'chobi_tus'},
-    {id:'iap_noads',  name:'حذف تبلیغات', kind:'noads', amount:0, priceLabel:'۷۹ هزار تومان', desc:'تجربهٔ بازی بدون وقفه'}
+    {id:'iap_seke500',  sku:'seke500',  name:'کیسهٔ سکه', kind:'coins', amount:500, priceLabel:'۵٬۰۰۰ تومان', desc:'۵۰۰ سکهٔ طلایی برای تجهیزات'},
+    {id:'iap_seke1500', sku:'seke1500', name:'صندوق سکه', kind:'coins', amount:1500, priceLabel:'۱۰٬۰۰۰ تومان', desc:'۱۵۰۰ سکه — پرشده از دمِ قیطان‌ها', best:true},
+    {id:'iap_seke4000', sku:'seke4000', name:'خزانهٔ سلطنتی سکه', kind:'coins', amount:4000, priceLabel:'۳۰٬۰۰۰ تومان', desc:'۴۰۰۰ سکه — برای سلطان‌های میدان'},
+    {id:'iap_almas15',  sku:'almas15',  name:'کیسهٔ الماس', kind:'gems', amount:15, priceLabel:'۱۰٬۰۰۰ تومان', desc:'۱۵ الماس گران‌بها'},
+    {id:'iap_almas35',  sku:'almas35',  name:'صندوق الماس', kind:'gems', amount:35, priceLabel:'۲۵٬۰۰۰ تومان', desc:'۳۵ الماس درخشان'},
+    {id:'iap_almas80',  sku:'almas80',  name:'خزانهٔ الماس', kind:'gems', amount:80, priceLabel:'۶۰٬۰۰۰ تومان', desc:'۸۰ الماس — گنجِ پنهانِ پارس'},
+    {id:'iap_amazing',  sku:'amazing',  name:'پیشنهاد شگفت‌انگیز', kind:'bundle', coins:1000, amount:100, priceLabel:'۸۹٬۰۰۰ تومان', desc:'۱۰۰۰ سکه + ۱۰۰ الماس — بیشترین ارزش!', amazing:true}
   ]
 };
 
-/* ---------- مراحل مرحله‌ای ---------- */
+/* ---------- مراحل مرحله‌ای (۱۲ مرحله — هر مرحله حریف قوی‌تر) ---------- */
 CH.LEVELS=[
   {n:1,name:'زمین دهکده',team:'دهکدهٔ شرقی',col:'#c0603a',dur:60,diff:.5,env:'village',goalN:3},
-  {n:2,name:'دشت آفتاب',team:'طایفهٔ کوهپایه',col:'#7a6a3a',dur:75,diff:.62,env:'plain',goalN:3},
-  {n:3,name:'میدان کاروان‌سرا',team:'کاروان‌سواران',col:'#8a5a2a',dur:75,diff:.72,env:'plain',goalN:3},
-  {n:4,name:'شب‌های دربار',team:'درباریان',col:'#3a4a7a',dur:90,diff:.8,env:'night',goalN:4},
-  {n:5,name:'میدان شهر',team:'شهر‌بانان',col:'#2a7a6a',dur:90,diff:.86,env:'village',goalN:4},
-  {n:6,name:'زمین آکادمی',team:'شاگردان آکادمی',col:'#1c3a6e',dur:100,diff:.92,env:'royal',goalN:4},
-  {n:7,name:'حرفه‌ای: شکارچیان',team:'شکارچیان کرمان',col:'#7a2a2a',dur:110,diff:1.0,env:'plain',goalN:5},
-  {n:8,name:'فینال زرین',team:'تیم زرین ساسان',col:'#caa84f',dur:120,diff:1.06,env:'night',goalN:5}
+  {n:2,name:'دشت آفتاب',team:'طایفهٔ کوهپایه',col:'#7a6a3a',dur:70,diff:.58,env:'plain',goalN:3},
+  {n:3,name:'میدان کاروان‌سرا',team:'کاروان‌سواران',col:'#8a5a2a',dur:75,diff:.66,env:'plain',goalN:3},
+  {n:4,name:'شب‌های دربار',team:'درباریان',col:'#3a4a7a',dur:80,diff:.74,env:'night',goalN:4},
+  {n:5,name:'میدان شهر',team:'شهر‌بانان',col:'#2a7a6a',dur:80,diff:.8,env:'village',goalN:4},
+  {n:6,name:'زمین آکادمی',team:'شاگردان آکادمی',col:'#1c3a6e',dur:90,diff:.86,env:'royal',goalN:4},
+  {n:7,name:'شکارچیان کرمان',team:'شکارچیان کرمان',col:'#7a2a2a',dur:95,diff:.92,env:'plain',goalN:4},
+  {n:8,name:'فینال زرین',team:'تیم زرین ساسان',col:'#caa84f',dur:100,diff:.98,env:'night',goalN:5},
+  {n:9,name:'تختِ زرین',team:'گارد شاهنشاهی',col:'#8a3a5a',dur:105,diff:1.04,env:'royal',goalN:5},
+  {n:10,name:'کویر سرخ',team:'تاخت‌زنان کویر',col:'#b8502a',dur:110,diff:1.1,env:'plain',goalN:5},
+  {n:11,name:'ساحل زرینه',team:'ناخدایان زرینه',col:'#1e6e8a',dur:115,diff:1.16,env:'village',goalN:5},
+  {n:12,name:'میدان افسانه',team:'ستارگان پارس',col:'#5a3a8a',dur:120,diff:1.22,env:'night',goalN:6}
 ];
 
-/* ---------- دیالوگ‌های داستان (۷ فصل) ----------
+/* ---------- دیالوگ‌های داستان (۹ فصل) ----------
    s = گوینده (کلید CH.CHARS یا 'me' برای قهرمان/اسم کاربر)
    id شناسهٔ خط برای فایل صوتی گوینده: audio/vo/<id>.ogg */
 
@@ -227,29 +231,73 @@ D.ch6_after=[
   {id:'ch6_khos_03', s:'khosrow', t:'خوب پیش می‌ری، پسر. ولی فینالِ بازی‌های بزرگ یه دنیای دیگه‌ست. از همین حالا آماده باش.'}
 ];
 
-/* ===== فصل ۷ — میدان بزرگ (فینال) ===== */
-D.ch7_final=[
-  {id:'ch7_grand_01', s:'grand', t:'امروز اون روزه، ریزه. چوبت رو محکم بگیر؛ از پشت بزن، نه از رو.'},
-  {id:'ch7_amir_01', s:'amir', t:'من و گلنار تیمِ توایم، کاپیتان! فقط بگو بزنیم و ببریم!'},
-  {id:'ch7_golnar_01', s:'golnar', t:'نقشه ساده‌ست: تو حمله، من پاس می‌دم، امیر... امیر فقط هوای تیم رو داشته باشه و جلو بره!'},
-  {id:'ch7_amir_02', s:'amir', t:'شنیدم ها! شنیدم!'},
-  {id:'ch7_mother_01', s:'mother', t:'{name}! اون‌قدر نترس که یادت بره نفس بکشی. من و بابابزرگ از کنارِ زمین چشم‌هامون به توئه.'},
-  {id:'ch7_grand_02', s:'grand', t:'از وقتی پدرت بچه بود، منتظرِ همین روز بودم. حالا برو و تمومش کن.'}
+/* ===== فصل ۷ — شبِ مشعل‌ها (غم و شادی) ===== */
+D.ch7_night=[
+  {id:'ch7_vendor_01', s:'vendor', t:'هوی و هالا! حاجیِ دهکده! خبر داری امشب شبِ «چوگانِ مشعل‌هاست»؟ سنتِ قدیمیِ بازاری‌ها: بازی زیرِ نورِ آتش!'},
+  {id:'ch7_me_01', s:'me', t:'چوگانِ مشعل‌ها؟ تا حالا اسمشو هم نشنیده بودم!'},
+  {id:'ch7_vendor_02', s:'vendor', t:'قدیم‌ها وقتی مهتاب نبود، چهار تا مشعلِ بزرگ دورِ زمین می‌ذاشتن و تا نیمه‌شب بازی می‌کردن. امروز هم قراره همین کارو بکنیم!'},
+  {id:'ch7_vendor_03', s:'vendor', t:'چهار تا مشعلِ بازی، این اواخر تو باغِ شاهی و دورِ میدون‌ها جا مونده. جمعشون کن بیار تا فتیله‌شون رو تازه کنیم!'}
 ];
-D.ch7_win=[
-  {id:'ch7_salar_01', s:'salar', t:'بانگ بزنید! از دشت تا دروازهٔ شهر! قهرمانِ بازی‌های بزرگِ پارس: {name}!'},
-  {id:'ch7_salar_02', s:'salar', t:'به فرمانِ سالارِ بازی‌ها، تو را «چوگان‌باز حرفه‌ای پارس» می‌نامم. این جام و این لقب، از آنِ توست.'},
-  {id:'ch7_sys_01', s:'sys', t:'لقب «چوگان‌باز حرفه‌ای» باز شد! +۶۰۰ سکه + ۱۵ الماس'},
-  {id:'ch7_grand_03', s:'grand', t:'(چشمک می‌زند) بهت گفته بودم... خونشه دیگه، خونش.'},
-  {id:'ch7_me_03', s:'me', t:'این جام مالِ شماست بابابزرگ. من فقط راهِ شما رو ادامه دادم.'},
-  {id:'ch7_sassan_01', s:'sassan', t:'(پیش می‌آید و دست دراز می‌کند) بازی درخششی بود. تندی‌های اولِ راه رو به حساب نگیر. فصلِ بعد، تیمِ من و تو... حریفِ همه می‌شیم.'},
-  {id:'ch7_me_04', s:'me', t:'چشم، ساسان. میدانِ بزرگ‌تر منتظرِ همهٔ ماست.'},
-  {id:'ch7_amir_03', s:'amir', t:'حالا حالاها! فردا تمرینِ دوبارشه!'},
-  {id:'ch7_golnar_02', s:'golnar', t:'قدمِ بعدی: قهرمانیِ تورنمنت‌های شاهنشاهی. و این بار هیچ‌کی نمی‌تونه جلومون رو بگیره!'},
-  {id:'ch7_narr_01', s:'narr', t:'و این‌طور بود که پسری از یک دهکدهٔ کوچک، چوگان‌باز حرفه‌ای پارس شد... اما این فقط اولِ راه بود.'}
+D.ch7_baghban=[
+  {id:'ch7_bagh_01', s:'baghban', t:'پسری! صدای بازاری که بلند شده... تو هم می‌خوای امشب بازی کنی؟'},
+  {id:'ch7_me_02', s:'me', t:'آره، پیر جان! قراره شبِ چوگانِ مشعل‌ها رو برگزار کنیم. اومدم مشعل‌ها رو بردارم.'},
+  {id:'ch7_bagh_02', s:'baghban', t:'(آهی می‌کشد) پسرم... پسرِ خودمم یه روز چوگان‌باز بود. شبِ مشعل‌ها بهترین بازی‌هاشو می‌کرد... سال‌هاست که پیشِ خداست.'},
+  {id:'ch7_me_03', s:'me', t:'نمی‌دونستم... ببخشید که جلوِ چشمت از این حرفا زدم.'},
+  {id:'ch7_bagh_03', s:'baghban', t:'نه پسرم، غمگین نباش! خوشحالم. امشب وقتی مشعل‌ها روشن بشن، انگار اونم به میدان اومده. برای اونم بازی کن؛ اونم از این‌جا تماشا می‌کنه.'},
+  {id:'ch7_bagh_04', s:'baghban', t:'اینم فتیله‌ی تازه و چراغ‌کشِ مشعل‌ها. امشب میدون نورانی می‌شه... مثلِ جوونیِ من.'}
 ];
-D.ch7_lose=[
-  {id:'ch7_lose_01', s:'grand', t:'ناامیدی نه به کارِ پهلوان می‌آید، نه به کارِ تو. بلند شو، نفس بکش، و دوباره به میدان برو.'}
+D.ch7_night_win=[
+  {id:'ch7_amir_01', s:'amir', t:'وای چه بازی‌ای! زیرِ نورِ مشعل‌ها، سه تا گل یکی‌یکی قشنگ‌تر از قبلی!'},
+  {id:'ch7_bagh_05', s:'baghban', t:'(اشک در چشمانش می‌درخشد) پسرم از آسمون نگاه می‌کرد... دید که امشب میدونِ او دوباره گرم شد. ممنونتم، همتون.'},
+  {id:'ch7_vendor_04', s:'vendor', t:'دیدی حاجی؟ اینجور شبا پیرمرد‌ها هم جوون می‌شن! بگم بقیه‌ی بازاری‌ها بیاین جشن بگیریم؟'},
+  {id:'ch7_narr_01', s:'narr', t:'و آن شب، میدانِ شهر تا سپیده صبح روشن و شاد ماند. باغبانِ پیر تا آخرین مشعل کنارِ میدان ماند و لبخند زد.'}
+];
+
+/* ===== فصل ۸ — تیمِ من ===== */
+D.ch8_team=[
+  {id:'ch8_golnar_01', s:'golnar', t:'{name}! فینالِ بازی‌های بزرگ نزدیکه و تو هنوز تیمِ رسمی نداری؟! بگو ببینم چه نقشه‌ای داری؟'},
+  {id:'ch8_me_01', s:'me', t:'نقشه‌ام اینه: تو، من، و... امیر!'},
+  {id:'ch8_amir_01', s:'amir', t:'من؟! نه نه... من که از اسب می‌ترسم! من فقط هوارو از کنارِ زمین می‌کنم...'},
+  {id:'ch8_golnar_02', s:'golnar', t:'امیر! همین امروز اسبِ آرومِ اصطبلِ تهمینه منتظرته؛ حنچه‌ش از آبِ صاف‌تره. اگه امشب سوار نشی، فردا هم نمی‌شی...'},
+  {id:'ch8_amir_02', s:'amir', t:'(نفس عمیق)... باشه. از اسب می‌ترسم، ولی از دستِ دادنِ تیم بیشتر. سوار می‌شم!'},
+  {id:'ch8_khosrow_01', s:'khosrow', t:'می‌بخشم که شنیدم. تازه‌واردِ دهکده! اگه می‌خوای به فینال برسی، تیمِ تو باید از شاگردانِ آکادمی محک بخوره. فردا ظهر، زمینِ اصلی. قبوله؟'}
+];
+D.ch8_train=[
+  {id:'ch8_golnar_03', s:'golnar', t:'قبل از مسابقه، یه تمرینِ تیمی بکنیم: من و تو و امیر، هشت تا حلقه، هفتاد ثانیه. امیر جلو می‌ره و راهو باز می‌کنه، من پاس می‌دم، تو گل می‌زنی!'},
+  {id:'ch8_amir_03', s:'amir', t:'(روی اسب، کمی لرزان) داری می‌بینی؟ من سوارِ اسبم! مامان باید اینو ببینه!'},
+  {id:'ch8_sys_01', s:'sys', t:'تمرین تیمی: در ۷۰ ثانیه ۸ حلقه را سوار بر اسب رد کن!'}
+];
+D.ch8_win=[
+  {id:'ch8_farhad_01', s:'farhad', t:'بازیِ تیمیِ تمیزی بود. سه نفری مثل یه نفر بازی کردید. ساسان بیشتر از همیشه ازتون حرف می‌زنه!'},
+  {id:'ch8_amir_04', s:'amir', t:'شنیدین اون‌جاها؟ من تو مسابقه‌ی رسمی بازی کردم! از این به بعد منم چوگان‌بازم!'},
+  {id:'ch8_golnar_04', s:'golnar', t:'حالا که تیمِ ما محک خودشو خورد... فینال منتظرِ ماست. میدانِ بزرگ، تیمِ زرینِ ساسان. بریم تاریخ بسازیم!'},
+  {id:'ch8_me_02', s:'me', t:'برای بابابزرگ، برای بادبه، برای همه‌ی دهکده... بریم فینال!'}
+];
+
+/* ===== فصل ۹ — میدان بزرگ (فینال) ===== */
+D.ch9_final=[
+  {id:'ch9_grand_01', s:'grand', t:'امروز اون روزه، ریزه. چوبت رو محکم بگیر؛ از پشت بزن، نه از رو.'},
+  {id:'ch9_amir_01', s:'amir', t:'من و گلنار تیمِ توایم، کاپیتان! فقط بگو بزنیم و ببریم!'},
+  {id:'ch9_golnar_01', s:'golnar', t:'نقشه ساده‌ست: تو حمله، من پاس می‌دم، امیر... امیر فقط هوای تیم رو داشته باشه و جلو بره!'},
+  {id:'ch9_amir_02', s:'amir', t:'شنیدم ها! شنیدم! — این‌بار روی اسب، نه کنارِ زمین!'},
+  {id:'ch9_mother_01', s:'mother', t:'{name}! اون‌قدر نترس که یادت بره نفس بکشی. من و بابابزرگ از کنارِ زمین چشم‌هامون به توئه.'},
+  {id:'ch9_grand_02', s:'grand', t:'از وقتی پدرت بچه بود، منتظرِ همین روز بودم. حالا برو و تمومش کن.'}
+];
+D.ch9_win=[
+  {id:'ch9_salar_01', s:'salar', t:'بانگ بزنید! از دشت تا دروازهٔ شهر! قهرمانِ بازی‌های بزرگِ پارس: {name}!'},
+  {id:'ch9_salar_02', s:'salar', t:'به فرمانِ سالارِ بازی‌ها، تو را «چوگان‌باز حرفه‌ای پارس» می‌نامم. این جام و این لقب، از آنِ توست.'},
+  {id:'ch9_sys_01', s:'sys', t:'لقب «چوگان‌باز حرفه‌ای» باز شد! +۶۰۰ سکه + ۱۵ الماس'},
+  {id:'ch9_grand_03', s:'grand', t:'(چشمک می‌زند) بهت گفته بودم... خونشه دیگه، خونش.'},
+  {id:'ch9_me_03', s:'me', t:'این جام مالِ شماست بابابزرگ. من فقط راهِ شما رو ادامه دادم.'},
+  {id:'ch9_sassan_01', s:'sassan', t:'(پیش می‌آید و دست دراز می‌کند) بازی درخششی بود. تندی‌های اولِ راه رو به حساب نگیر. فصلِ بعد، تیمِ من و تو... حریفِ همه می‌شیم.'},
+  {id:'ch9_me_04', s:'me', t:'چشم، ساسان. میدانِ بزرگ‌تر منتظرِ همهٔ ماست.'},
+  {id:'ch9_amir_03', s:'amir', t:'حالا حالاها! فردا تمرینِ دوبارشه — البته اگه فرداش از امشب دردِ کمرم کم شه!'},
+  {id:'ch9_golnar_02', s:'golnar', t:'قدمِ بعدی: قهرمانیِ تورنمنت‌های شاهنشاهی. و این بار هیچ‌کی نمی‌تونه جلومون رو بگیره!'},
+  {id:'ch9_bagh_01', s:'baghban', t:'(از دور، دستشو بالا می‌بره) پسرِ دهکده! ممنونم که میدان رو دوباره برای همه‌مون روشن کردی!'},
+  {id:'ch9_narr_01', s:'narr', t:'و این‌طور بود که پسری از یک دهکدهٔ کوچک، چوگان‌باز حرفه‌ای پارس شد... اما این فقط اولِ راه بود.'}
+];
+D.ch9_lose=[
+  {id:'ch9_lose_01', s:'grand', t:'ناامیدی نه به کارِ پهلوان می‌آید، نه به کارِ تو. بلند شو، نفس بکش، و دوباره به میدان برو.'}
 ];
 
 /* دیالوگ‌های محیطی NPC (تصادفی) */
@@ -280,7 +328,7 @@ D.sys={
   timeLow:['آخرین ثانیه‌ها!']
 };
 
-/* ---------- ماموریت‌های داستان (۷ فصل) ---------- */
+/* ---------- ماموریت‌های داستان (۹ فصل) ---------- */
 /* step types: dialog | talk | collect | targets | match | reach */
 CH.QUESTS=[
   { ch:1, title:'رویای چوگان', steps:[
@@ -297,10 +345,10 @@ CH.QUESTS=[
     ]},
   { ch:3, title:'روز مبادا', steps:[
       {type:'dialog', lines:D.ch3_storm},
-      {type:'collect', n:3, item:'track', at:[[930,1120],[1110,1250],[850,1360]],
+      {type:'collect', n:3, item:'track', badbehLost:true, at:[[930,1120],[1110,1250],[850,1360]],
        obj:'۳ ردِ نعلِ بادبه را در دشت پیدا کن', toast:'ردِ نعل‌ها بین جاده و درخت‌های دشت است!',
        reward:{coins:40}},
-      {type:'reach', x:720, y:1400, r:120, lines:D.ch3_found, obj:'ردِ نعل‌ها را دنبال کن و بادبه را پیدا کن'},
+      {type:'reach', x:720, y:1400, r:120, lines:D.ch3_found, foundBadbeh:true, obj:'ردِ نعل‌ها را دنبال کن و بادبه را پیدا کن'},
     ]},
   { ch:4, title:'مسابقهٔ دهکده', steps:[
       {type:'talk', npc:'grand', lines:D.ch4_grand, obj:'با بابابزرگ دربارهٔ مسابقه حرف بزن'},
@@ -311,17 +359,30 @@ CH.QUESTS=[
       {type:'talk', npc:'khosrow', lines:D.ch5_khosrow, obj:'با استاد خسرو حرف بزن'},
       {type:'targets', n:6, area:'royalField', onFoot:false, goal:true, time:90, obj:'در ۹۰ ثانیه ۶ گل به دروازهٔ خالی بزن', reward:{coins:120}},
       {type:'talk', npc:'golnar', lines:D.ch5_pass, obj:'با گلنار صحبت کن'},
-      {type:'match', tag:'duel', cfg:{diff:.78,dur:70,goalN:2,team:'ساسان و یارش',col:'#2a2a3e',env:'royal',title:'دوئل با ساسان',myTeam:'تیم من',small:2}, obj:'دوئل ۲ به ۲ با ساسان!', reward:{coins:250}},
+      {type:'match', tag:'duel', cfg:{diff:.9,dur:70,goalN:2,team:'ساسان و یارش',col:'#2a2a3e',env:'royal',title:'دوئل با ساسان',myTeam:'تیم من',small:2}, obj:'دوئل ۲ به ۲ با ساسان!', reward:{coins:250}},
     ]},
   { ch:6, title:'آزمون آکادمی', steps:[
       {type:'talk', npc:'farhad', lines:D.ch6_trial, obj:'نزد فرهاد در آکادمی برو'},
       {type:'targets', n:8, area:'royalField', onFoot:false, time:75, obj:'در ۷۵ ثانیه ۸ حلقه را سوار بر اسب رد کن', reward:{coins:150}},
       {type:'talk', npc:'khosrow', lines:D.ch6_match, obj:'نتیجه را به استاد خسرو اعلام کن'},
-      {type:'match', tag:'trial', cfg:{diff:.9,dur:80,goalN:2,team:'تیم فرهاد',col:'#5a4a8a',env:'royal',title:'دوئل با فرهاد',myTeam:'تیم من'}, obj:'دوئل با فرهاد!', reward:{coins:250}},
+      {type:'match', tag:'trial', cfg:{diff:.98,dur:80,goalN:2,team:'تیم فرهاد',col:'#5a4a8a',env:'royal',title:'دوئل با فرهاد',myTeam:'تیم من'}, obj:'دوئل با فرهاد!', reward:{coins:250}},
     ]},
-  { ch:7, title:'میدان بزرگ', steps:[
-      {type:'talk', npc:'grand', lines:D.ch7_final, obj:'مواعدت نهایی با بابابزرگ'},
-      {type:'match', tag:'final', cfg:{diff:1.02,dur:120,goalN:5,team:'تیم زرین ساسان',col:'#caa84f',env:'royal',title:'فینال بازی‌های بزرگ پارس',myTeam:'تیم من'}, obj:'فینال: تیم زرین ساسان!', reward:{coins:600,gems:15}},
+  { ch:7, title:'شبِ مشعل‌ها', steps:[
+      {type:'talk', npc:'vendor', lines:D.ch7_night, obj:'نزد دستفروش در بازار شهر برو'},
+      {type:'collect', n:4, item:'torch', at:[[2100,1330],[2400,1240],[2740,1120],[1150,1400]],
+       obj:'۴ مشعل برای شب‌چوگان پیدا کن', toast:'مشعل‌ها دورِ باغِ شاهی و میدان‌ها افتاده‌اند!',
+       reward:{coins:120}},
+      {type:'talk', npc:'baghban', lines:D.ch7_baghban, obj:'به باغبانِ پیر سر بزن'},
+      {type:'match', tag:'night', cfg:{diff:.84,dur:90,goalN:3,team:'کاروان‌سواران شب',col:'#8a5a2a',env:'night',title:'چوگانِ مشعل‌ها',myTeam:'تیم من'}, obj:'بازیِ شبِ مشعل‌ها روی زمین طلایی!', reward:{coins:300}},
+    ]},
+  { ch:8, title:'تیمِ من', steps:[
+      {type:'talk', npc:'golnar', lines:D.ch8_team, obj:'با گلنار دربارهٔ تیم صحبت کن'},
+      {type:'targets', n:8, area:'royalField', onFoot:false, time:70, obj:'تمرینِ تیمی: در ۷۰ ثانیه ۸ حلقه رد کن', lines:D.ch8_train, reward:{coins:180}},
+      {type:'match', tag:'academy', cfg:{diff:1.0,dur:95,goalN:4,team:'شاگردان آکادمی',col:'#1c3a6e',env:'royal',title:'محکِ تیمِ من',myTeam:'تیم من'}, obj:'مسابقهٔ محک با شاگردان آکادمی!', reward:{coins:350}},
+    ]},
+  { ch:9, title:'میدان بزرگ', steps:[
+      {type:'talk', npc:'grand', lines:D.ch9_final, obj:'مواعدت نهایی با بابابزرگ'},
+      {type:'match', tag:'final', cfg:{diff:1.1,dur:120,goalN:5,team:'تیم زرین ساسان',col:'#caa84f',env:'royal',title:'فینال بازی‌های بزرگ پارس',myTeam:'تیم من'}, obj:'فینال: تیم زرین ساسان!', reward:{coins:600,gems:15}},
     ]}
 ];
 CH.AMBIENT_NPCS=['villager1','villager2'];

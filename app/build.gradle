@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.parsgames.chogan'
+    namespace 'ir.amir.chogan'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.parsgames.chogan"
+        applicationId "ir.amir.chogan"
         minSdk 21
         targetSdk 34
         versionCode 1
@@ -33,4 +33,13 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.core:core-ktx:1.13.1'
+
+    /* ── ادیوری (Adivery) — طبق مستندات docs.adivery.com/android ── */
+    implementation 'com.adivery:sdk:4.9.0'
+    // ارسال Google Advertising ID برای هدف‌گیری بهتر تبلیغات
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+
+    /* ── پرداخت درون‌برنامه‌ای مایکت ──
+       طبق مستندات رسمی مایکت از فایل AIDL و کلاس‌های نمونهٔ TrivialDrive
+       (ir.amir.chogan.iap) استفاده شده است — هیچ وابستگی اضافه‌ای لازم نیست. */
 }

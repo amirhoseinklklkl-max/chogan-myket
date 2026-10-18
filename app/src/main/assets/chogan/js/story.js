@@ -69,6 +69,8 @@ S.applyStep=function(){
   const step=q.steps[st.step];
   S.clearPractice(); S.hay=[];
   if(!step){ S.nextStep(); return; }
+  /* رفع باگ: در فصل ۳ که بادبه گم شده، بازیکن نباید سوار اسب باشد */
+  if(step.badbehLost&&st.hasHorse){ st.hasHorse=false; CH.save.write(); CH.toast('بادبه گم شده… باید پیاده دنبالش بگردی'); }
   switch(step.type){
     case 'dialog':
       S.setObj('…');
@@ -103,6 +105,19 @@ S.applyStep=function(){
   }
 };
 
+/* بازگشت بادبه پس از پیدا شدن (فصل ۳) */
+S.reuniteBadbeh=function(){
+  const st=CH.save.d.story;
+  if(!st.hasHorse){
+    st.hasHorse=true;
+    if(!CH.save.d.owned.horses.includes('badba'))CH.save.d.owned.horses.push('badba');
+    CH.save.d.equipped.horse='badba';
+    CH.save.write();
+    CH.fx.burst(S.player.x,S.player.y-30,'#8ff0dd',24);
+    CH.bigNote('بادبه برگشت!',1500);
+  }
+};
+
 S.nextStep=function(){
   const st=CH.save.d.story;
   const q=CH.QUESTS[st.ch];
@@ -127,6 +142,8 @@ S.finishStory=function(){
   CH.ui.chapterCard('پایان','چوگان‌باز حرفه‌ای پارس',()=>{});
   S.updateStoryState();
   S.freeRoam();
+  /* درخواست نظر در مایکت — پایان داستان */
+  setTimeout(()=>{ if(S.active&&CH.scenes.name==='story')CH.ui.showMyketReview(); },3400);
 };
 
 S.freeRoam=function(){
@@ -295,7 +312,7 @@ S.update=function(dt){
       if(!S._inGate){
         S._inGate=true;
         if(stp.gate)S.gateChallenge();
-        else if(stp.lines)S.say(stp.lines,()=>S.nextStep());
+        else if(stp.lines)S.say(stp.lines,()=>{ if(stp.foundBadbeh)S.reuniteBadbeh(); S.nextStep(); });
       }
     }
     else S._inGate=false;
@@ -361,8 +378,12 @@ S.markerTarget=function(){
 };
 S.collectDone=function(step){
   const left=S.hay.filter(h=>!h.got).length;
-  if(left>0){ CH.toast((step.item==='track'?'رد نعل':'یونجه')+' برداشته شد! '+U.toFa(left)+' تای دیگر مانده'); }
-  else { CH.toast(step.item==='track'?'همهٔ ردها پیدا شد — بادبه همان‌جای نزدیکی است!':'همهٔ یونجه‌ها آماده است — ببر پیش تهمینه!'); S.nextStep(); }
+  const label=step.item==='track'?'رد نعل':(step.item==='torch'?'مشعل':'یونجه');
+  if(left>0){ CH.toast(label+' برداشته شد! '+U.toFa(left)+' تای دیگر مانده'); }
+  else {
+    CH.toast(step.item==='track'?'همهٔ ردها پیدا شد — بادبه همان‌جای نزدیکی است!':(step.item==='torch'?'همهٔ مشعل‌ها آماده است — ببر پیش باغبان!':'همهٔ یونجه‌ها آماده است — ببر پیش تهمینه!'));
+    S.nextStep();
+  }
 };
 
 /* ---------- تعامل ---------- */
@@ -442,10 +463,12 @@ S.storyMatchEnd=function(res){
     if(tag==='village')S.say(SD.ch4_win,()=>S.nextStep());
     else if(tag==='duel')S.say(SD.ch5_duel_win,()=>S.nextStep());
     else if(tag==='trial')S.say(SD.ch6_after,()=>S.nextStep());
-    else if(tag==='final')S.say(SD.ch7_win,()=>S.nextStep());
+    else if(tag==='night')S.say(SD.ch7_night_win,()=>S.nextStep());
+    else if(tag==='academy')S.say(SD.ch8_win,()=>S.nextStep());
+    else if(tag==='final')S.say(SD.ch9_win,()=>S.nextStep());
     else S.nextStep();
   } else {
-    if(tag==='final')S.say(SD.ch7_lose,()=>{});
+    if(tag==='final')S.say(SD.ch9_lose,()=>{});
     CH.toast('باختی! از نشانگر زمین، دوباره شروع کن');
   }
 };
@@ -509,6 +532,16 @@ S.render=function(ctx){
       ctx.beginPath(); ctx.ellipse(0,1,7,5,0.3,0,TAU); ctx.fill();
       ctx.fillStyle='#8a6a44';
       for(const fp of [[-8,-6],[8,-6],[-8,7],[8,7]]){ ctx.beginPath(); ctx.ellipse(fp[0],fp[1],2.6,1.8,0.3,0,TAU); ctx.fill(); }
+    } else if(h.kind==='torch'){
+      // مشعل شب‌چوگان
+      ctx.fillStyle='#5a4028'; ctx.fillRect(-3,-6,6,22);
+      ctx.strokeStyle='#3a2a1a'; ctx.lineWidth=2; ctx.strokeRect(-3,-6,6,22);
+      const fw=Math.sin(t*9+h.x)*2;
+      const fg=ctx.createRadialGradient(0,-14,1,0,-14,13+fw);
+      fg.addColorStop(0,'#fff3c0'); fg.addColorStop(.4,'#ffb84a'); fg.addColorStop(1,'rgba(255,120,40,0)');
+      ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(0,-14,13+fw,0,TAU); ctx.fill();
+      ctx.fillStyle='#ffdd88'; ctx.beginPath();
+      ctx.moveTo(0,-24-fw); ctx.quadraticCurveTo(6,-14,3,-8); ctx.quadraticCurveTo(0,-10,-3,-8); ctx.quadraticCurveTo(-6,-14,0,-24-fw); ctx.closePath(); ctx.fill();
     } else {
       ctx.fillStyle='#d8b860';
       ctx.beginPath(); ctx.ellipse(0,0,16,11,0.3,0,TAU); ctx.fill();

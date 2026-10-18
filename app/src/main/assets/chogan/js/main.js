@@ -11,6 +11,7 @@ CH.scenes.def.menu={
     CH.ui.hideModal('confirm-modal');
     CH.ui.hideModal('name-modal');
     CH.ui.hideModal('ad-modal');
+    CH.ui.hideModal('myket-modal');
     CH.ui.hideModal('scr-pause');
     CH.input.enable(false);
     CH.ui.refreshCoins();
