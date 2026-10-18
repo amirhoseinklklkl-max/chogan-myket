@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -462,9 +463,9 @@ public class IabHelper {
                 return true;
             }
 
-            int responseCode = getResponseCodeFromBundle(data);
-            String purchaseData = data.getString(RESPONSE_INAPP_PURCHASE_DATA);
-            String dataSignature = data.getString(RESPONSE_INAPP_SIGNATURE);
+            int responseCode = getResponseCodeFromIntent(data);
+            String purchaseData = data.getStringExtra(RESPONSE_INAPP_PURCHASE_DATA);
+            String dataSignature = data.getStringExtra(RESPONSE_INAPP_SIGNATURE);
 
             if (resultCode == Activity.RESULT_OK && responseCode == BILLING_RESPONSE_RESULT_OK) {
                 logDebug("Successful resultcode from purchase activity.");
@@ -641,7 +642,7 @@ public class IabHelper {
                 logDebug("getPurchases() failed: " + getResponseDesc(response));
                 return response;
             }
-            if (!purchasesBundle.containsKey(RESPONSE_INAPP_ITEM_LIST)
+            if (!purchasesBundle.containsKey(RESPONSE_INAPP_PURCHASE_ITEM_LIST)
                     || !purchasesBundle.containsKey(RESPONSE_INAPP_PURCHASE_DATA_LIST)
                     || !purchasesBundle.containsKey(RESPONSE_INAPP_SIGNATURE_LIST)) {
                 logError("Bundle returned from getPurchases() doesn't contain required fields.");
@@ -649,7 +650,7 @@ public class IabHelper {
             }
 
             ArrayList<String> ownedSkus = purchasesBundle.getStringArrayList(
-                    RESPONSE_INAPP_ITEM_LIST);
+                    RESPONSE_INAPP_PURCHASE_ITEM_LIST);
             ArrayList<String> purchaseDataList = purchasesBundle.getStringArrayList(
                     RESPONSE_INAPP_PURCHASE_DATA_LIST);
             ArrayList<String> signatureList = purchasesBundle.getStringArrayList(
