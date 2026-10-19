@@ -314,8 +314,10 @@ UI.renderShop=function(){
     adCard.appendChild(abtn);
     grid.appendChild(adCard);
     for(const it of CH.SHOP.iap){
+      // پیشنهاد شگفت‌انگیز: کارت منحصربه‌فرد با افکت نور متحرک
+      if(it.amazing){ grid.appendChild(UI.amazingCard(it)); continue; }
       const card=document.createElement('div');
-      card.className='shop-card'+(it.best?' best':'')+(it.amazing?' amazing':'');
+      card.className='shop-card'+(it.best?' best':'');
       const th=document.createElement('div'); th.className='shop-thumb';
       const cv=document.createElement('canvas'); cv.width=120; cv.height=86;
       th.appendChild(cv); card.appendChild(th);
@@ -329,13 +331,33 @@ UI.renderShop=function(){
       card.appendChild(btn);
       grid.appendChild(card);
     }
-    const note=document.createElement('p');
-    note.className='hint'; note.style.gridColumn='1/-1'; note.style.textAlign='center';
-    note.textContent=(CH.isAndroid
-      ?'⚡ پرداخت با مایکت انجام می‌شود — سکه‌ها و الماس‌ها بلافاصله بعد از پرداخت اضافه می‌شوند. تبلیغ جایزه‌دار با ادیوری است.'
-      :'⚡ حالت آزمایشی وب — خرید واقعی در نسخهٔ اندروید (مایکت) فعال است. تبلیغ جایزه‌دار در اندروید با ادیوری اجرا می‌شود.');
-    grid.appendChild(note);
   }
+};
+
+/* ---------- کارت ویژهٔ «پیشنهاد شگفت‌انگیز» — طراحی منحصربه‌فرد با نور متحرک ---------- */
+UI.amazingCard=function(it){
+  const card=document.createElement('div');
+  card.className='shop-card amazing';
+  // نشان ویژهٔ چشمک‌زن
+  const badge=document.createElement('div'); badge.className='amz-badge'; badge.textContent='⚡ ویژه‌ترین پیشنهاد';
+  card.appendChild(badge);
+  // آیکون
+  const th=document.createElement('div'); th.className='shop-thumb amz-thumb';
+  const cv=document.createElement('canvas'); cv.width=120; cv.height=86;
+  th.appendChild(cv); card.appendChild(th);
+  CH.G.itemIcon(cv,'iap',it);
+  // متن‌ها
+  const mid=document.createElement('div'); mid.className='amz-mid';
+  const nm=document.createElement('div'); nm.className='shop-name amz-name'; nm.textContent=it.name; mid.appendChild(nm);
+  const ds=document.createElement('div'); ds.className='amz-desc'; ds.textContent=it.desc; mid.appendChild(ds);
+  card.appendChild(mid);
+  // دکمهٔ خرید
+  const btn=document.createElement('button');
+  btn.className='shop-buy demo amz-btn';
+  btn.textContent=it.priceLabel+(CH.isAndroid?' — خرید':' — آزمایشی');
+  btn.onclick=()=>UI.iapBuy(it);
+  card.appendChild(btn);
+  return card;
 };
 
 /* ---------- تبلیغ جایزه‌دار (اندروید: ادیوری — وب: شبیه‌سازی) ---------- */

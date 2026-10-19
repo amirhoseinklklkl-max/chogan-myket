@@ -118,6 +118,28 @@ G.rider=function(ctx,e,time){
   }
 };
 
+/* ---------- برچسب بالای اسب‌ها در مسابقه (حریف / هم‌تیمی / تو) ---------- */
+G.tag=function(ctx,e,time){
+  const L={
+    enemy:{t:'حریف',   bg:'rgba(168,44,38,.92)', fg:'#ffe9e2', bd:'rgba(255,158,140,.75)'},
+    mate: {t:'هم‌تیمی', bg:'rgba(14,116,100,.92)',fg:'#dcfff5', bd:'rgba(120,255,224,.6)'},
+    me:   {t:'تو',      bg:'rgba(232,184,75,.96)',fg:'#3d2a00', bd:'rgba(255,242,200,.95)'}
+  }[e.label];
+  if(!L)return;
+  const bob=Math.sin(time*3+(e.i||0)*1.9)*2;   // شناوری ملایم
+  ctx.save(); ctx.translate(e.x,e.y-62+bob);
+  ctx.font='bold 12px Vazirmatn, Tahoma';
+  const w=ctx.measureText(L.t).width+16;
+  ctx.fillStyle=L.bg; ctx.strokeStyle=L.bd; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect(-w/2,-10,w,20,9); ctx.fill(); ctx.stroke();
+  // دنبالهٔ کوچک به سمت اسب
+  ctx.fillStyle=L.bg;
+  ctx.beginPath(); ctx.moveTo(-4.5,9.5); ctx.lineTo(0,15); ctx.lineTo(4.5,9.5); ctx.closePath(); ctx.fill();
+  ctx.fillStyle=L.fg; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(L.t,0,0.5);
+  ctx.restore();
+};
+
 /* ---------- توپ ---------- */
 G.ball=function(ctx,x,y,r,time,trailPts){
   if(CH.Q.trail&&trailPts&&trailPts.length>1){

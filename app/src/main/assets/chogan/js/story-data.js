@@ -74,7 +74,9 @@ CH.SHOP={
   ]
 };
 
-/* ---------- مراحل مرحله‌ای (۱۲ مرحله — هر مرحله حریف قوی‌تر) ---------- */
+/* ---------- مراحل مرحله‌ای (۲۰ مرحله — هر مرحله حریف قوی‌تر) ----------
+   اسب تیم حریف هم متناسب با قدرت از فروشگاه انتخاب می‌شود: ضعیف بادبه، قوی آذرخش،
+   و قوی‌تر از آن اسب‌های الماسی (مهتاب‌دوان، سیمرغ، پرنیان) */
 CH.LEVELS=[
   {n:1,name:'زمین دهکده',team:'دهکدهٔ شرقی',col:'#c0603a',dur:60,diff:.5,env:'village',goalN:3},
   {n:2,name:'دشت آفتاب',team:'طایفهٔ کوهپایه',col:'#7a6a3a',dur:70,diff:.58,env:'plain',goalN:3},
@@ -87,7 +89,15 @@ CH.LEVELS=[
   {n:9,name:'تختِ زرین',team:'گارد شاهنشاهی',col:'#8a3a5a',dur:105,diff:1.04,env:'royal',goalN:5},
   {n:10,name:'کویر سرخ',team:'تاخت‌زنان کویر',col:'#b8502a',dur:110,diff:1.1,env:'plain',goalN:5},
   {n:11,name:'ساحل زرینه',team:'ناخدایان زرینه',col:'#1e6e8a',dur:115,diff:1.16,env:'village',goalN:5},
-  {n:12,name:'میدان افسانه',team:'ستارگان پارس',col:'#5a3a8a',dur:120,diff:1.22,env:'night',goalN:6}
+  {n:12,name:'میدان افسانه',team:'ستارگان پارس',col:'#5a3a8a',dur:120,diff:1.22,env:'night',goalN:6},
+  {n:13,name:'میدان مهتاب',team:'سواران شبگرد',col:'#3a5a8a',dur:125,diff:1.26,env:'night',goalN:5},
+  {n:14,name:'کرانهٔ فیروزه',team:'دلیران جنوب',col:'#1e6e6a',dur:125,diff:1.28,env:'village',goalN:6},
+  {n:15,name:'کوچ سیمرغ',team:'آتش‌پرکان پارس',col:'#b8502a',dur:130,diff:1.3,env:'royal',goalN:6},
+  {n:16,name:'شکوه آتش',team:'سواران سیمرغ',col:'#c84a2a',dur:130,diff:1.32,env:'night',goalN:6},
+  {n:17,name:'آخرین دژ',team:'سرداران تاریکی',col:'#2a2a3e',dur:135,diff:1.34,env:'royal',goalN:6},
+  {n:18,name:'تالار زرین',team:'اسطوره‌های زرین',col:'#caa84f',dur:135,diff:1.36,env:'royal',goalN:6},
+  {n:19,name:'میدان اسطوره',team:'قهرمانان روزگار',col:'#8a2a4a',dur:140,diff:1.38,env:'night',goalN:7},
+  {n:20,name:'تاج پارس',team:'افسانه‌های پرنیان',col:'#d8b040',dur:145,diff:1.4,env:'royal',goalN:7}
 ];
 
 /* ---------- دیالوگ‌های داستان (۹ فصل) ----------
@@ -359,7 +369,7 @@ CH.QUESTS=[
       {type:'talk', npc:'khosrow', lines:D.ch5_khosrow, obj:'با استاد خسرو حرف بزن'},
       {type:'targets', n:6, area:'royalField', onFoot:false, goal:true, time:90, obj:'در ۹۰ ثانیه ۶ گل به دروازهٔ خالی بزن', reward:{coins:120}},
       {type:'talk', npc:'golnar', lines:D.ch5_pass, obj:'با گلنار صحبت کن'},
-      {type:'match', tag:'duel', cfg:{diff:.9,dur:70,goalN:2,team:'ساسان و یارش',col:'#2a2a3e',env:'royal',title:'دوئل با ساسان',myTeam:'تیم من',small:2}, obj:'دوئل ۲ به ۲ با ساسان!', reward:{coins:250}},
+      {type:'match', tag:'duel', cfg:{diff:.9,dur:70,goalN:2,team:'ساسان و یارش',col:'#2a2a3e',env:'royal',title:'دوئل با ساسان',myTeam:'تیم من'}, obj:'دوئل با ساسان!', reward:{coins:250}},
     ]},
   { ch:6, title:'آزمون آکادمی', steps:[
       {type:'talk', npc:'farhad', lines:D.ch6_trial, obj:'نزد فرهاد در آکادمی برو'},

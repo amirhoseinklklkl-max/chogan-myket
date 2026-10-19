@@ -8,12 +8,13 @@ CH.match=M;
 M.start=function(cfg){
   const s=CH.save.d;
   M.cfg=cfg; M.active=true;
+  M.paused=false; // هر مسابقهٔ جدید بدون توقف شروع می‌شود (رفع یخ‌زدگی بعد از خروج/شروع دوباره)
   CH.scenes.set('match');
   M.score={a:0,b:0};
   M.time=cfg.dur; M.phase='kickoff'; M.phaseT=1.2;
   M.cam={x:0,y:0}; M.shake=0; M.time065=false;
   M.trail=[];
-  const horse=CH.SHOP.horses.find(h=>h.id===s.equipped.horse);
+  const horse=CH.SHOP.horses.find(h=>h.id===s.equipped.horse)||CH.SHOP.horses[0]; // بدون اسب: بادبه
   const mallet=CH.SHOP.mallets.find(m=>m.id===s.equipped.mallet);
   M.stats={
     spd:(horse?horse.spd:0.92),
@@ -21,30 +22,44 @@ M.start=function(cfg){
     pow:(mallet?mallet.pow:1),
     acc:(mallet?mallet.acc:1)
   };
-  const nPer=(cfg.small===2)?2:3;   // تعداد بازیکنان زمینی هر تیم
+  /* سه اسب برای هر تیم: ۲ بازیکن زمینی + ۱ دروازه‌بان (چهار اسب زیاد بود) */
+  const nPer=2;
   M.nField=nPer;                     // ایندکس دروازه‌بان = nPer (هر تیم یک دروازه‌بان دارد)
   M.riders=[];
-  // تیم ما (a) سمت چپ — به دروازه راست حمله
-  const myNames=['me','امیر','گلنار','بردیا'];
-  const pool=CH.SHOP.horses;
+  // تیم ما (a) سمت چپ — به دروازه راست حمله — همه یکدست با اسبِ خودت
+  const myNames=['me','امیر'];
   for(let i=0;i<nPer;i++){
-    // بازیکن اول با اسبِ خودت — بقیه با اسب‌های متنوع
-    const h=i===0?(horse||pool[0]):pool[U.randi(0,pool.length-1)];
-    M.riders.push(M.mkRider('a',i,nPer,{spd:M.stats.spd,stam:M.stats.stam,pow:M.stats.pow,acc:M.stats.acc},myNames[i],h));
+    M.riders.push(M.mkRider('a',i,nPer,{spd:M.stats.spd,stam:M.stats.stam,pow:M.stats.pow,acc:M.stats.acc},myNames[i],horse));
   }
   const diff=cfg.diff||0.7;
-  const enNames=['حریف ۱','حریف ۲','حریف ۳','نگهبانِ حریف'];
+  // تیم حریف — هر سه اسب یکدست و متناسب با قدرتشان از فروشگاه انتخاب می‌شود
+  const enHorse=M.enemyHorse(diff);
+  const enNames=['حریف ۱','حریف ۲'];
   for(let i=0;i<nPer;i++){
-    M.riders.push(M.mkRider('b',i,nPer,{spd:U.clamp(0.86*diff,0.7,1.15),stam:0.9,pow:U.clamp(0.9*diff,0.75,1.15),acc:U.clamp(0.85*diff,0.6,1.1)},enNames[i],pool[U.randi(0,pool.length-1)]));
+    M.riders.push(M.mkRider('b',i,nPer,{spd:U.clamp(0.86*diff,0.7,1.2),stam:0.9,pow:U.clamp(0.9*diff,0.75,1.18),acc:U.clamp(0.85*diff,0.6,1.12)},enNames[i],enHorse));
   }
-  // دروازه‌بان‌ها — همیشه مستقل و هوشمند
-  M.riders.push(M.mkRider('a',nPer,nPer,{spd:1.0,stam:1.1,pow:0.9,acc:0.8},'نگهبان ما',null));
-  M.riders.push(M.mkRider('b',nPer,nPer,{spd:U.clamp(1.0*diff,0.85,1.18),stam:1.1,pow:0.9,acc:0.8},'نگهبانِ حریف',null));
+  // دروازه‌بان‌ها — همیشه مستقل و هوشمند (با اسبِ تیم خودشان)
+  M.riders.push(M.mkRider('a',nPer,nPer,{spd:1.0,stam:1.1,pow:0.9,acc:0.8},'نگهبان ما',horse));
+  M.riders.push(M.mkRider('b',nPer,nPer,{spd:U.clamp(1.0*diff,0.85,1.22),stam:1.1,pow:0.9,acc:0.8},'نگهبانِ حریف',enHorse));
+  // برچسب بالای اسب‌ها: حریف / هم‌تیمی / تو — تا حتی اگر هر دو تیم اسب یکسان داشته باشند معلوم باشد کیست
+  for(const r of M.riders)r.label=(r.team==='b')?'enemy':(r.i===0?'me':'mate');
   M.ctl=0; // همیشه اسبِ خودت — هیچ‌وقت بین اسب‌ها سوییچ نمی‌کنی
   M.resetPositions(true);
   CH.audio.play('whistle');
   CH.ui.matchHud(true,cfg);
   CH.input.enable(true);
+};
+
+/* اسبِ تیم حریف بر اساس قدرت (diff) از فروشگاه انتخاب می‌شود — ضعیف: بادبه، قوی: آذرخش و بالاتر */
+M.enemyHorse=function(diff){
+  const TIERS=[
+    {d:0.50,id:'badba'},{d:0.60,id:'ghazal'},{d:0.70,id:'shabdiv'},{d:0.80,id:'yamut'},
+    {d:0.90,id:'rakhsh'},{d:1.00,id:'baragh'},{d:1.10,id:'azarakhsh'},
+    {d:1.24,id:'mahtab'},{d:1.30,id:'simorgh'},{d:1.36,id:'parnian'}
+  ];
+  let pick=TIERS[0];
+  for(const t of TIERS){ if(diff>=t.d)pick=t; }
+  return CH.SHOP.horses.find(h=>h.id===pick.id)||CH.SHOP.horses[0];
 };
 
 M.mkRider=function(team,i,n,stats,name,horse){
@@ -157,7 +172,7 @@ M.aiControl=function(r,dt){
     ty=U.clamp(ty,-FH/2+40,FH/2-40);
   }
   const dx=tx-r.x, dy=ty-r.y, d=Math.hypot(dx,dy)||1;
-  let sp=250*st.spd*(sprint?1.35:1)*U.clamp(skill,0.6,1.1);
+  let sp=250*st.spd*(sprint?1.35:1)*U.clamp(skill,0.6,1.12);
   if(r.role==='keeper')sp*=1.12;               // دروازه‌بان چابک‌تر است
   if(r.role==='keeper'){ if(d<18)sp*=0.3; }
   else if(d<26)sp*=0.3;
@@ -332,6 +347,8 @@ M.render=function(ctx){
   // اسب‌ها با ترتیب y
   const all=M.riders.slice().sort((a,b)=>a.y-b.y);
   for(const r of all)CH.G.rider(ctx2,r,CH.now);
+  // برچسب‌های بالای اسب (حریف/هم‌تیمی/تو) — بعد از همهٔ اسب‌ها تا زیرشان پنهان نشود
+  for(const r of all)if(r.label)CH.G.tag(ctx2,r,CH.now);
   CH.G.ball(ctx2,M.ball.x,M.ball.y,BALL_R,CH.now,M.trail);
   CH.fx.draw(ctx2);
   ctx2.restore();
@@ -367,6 +384,7 @@ M.end=function(){
 
 M.stop=function(){
   M.active=false;
+  M.paused=false;
   CH.audio.gallop(false);
 };
 M.FIELD={FW,FH,GOAL_W,BALL_R};

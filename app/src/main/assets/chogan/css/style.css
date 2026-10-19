@@ -262,8 +262,49 @@ body.in-dialog .joy-zone{opacity:.25}
 .ad-card .ad-txt{flex:1;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
 .ad-card .shop-buy{align-self:center}
 
+/* ---------- پیشنهاد شگفت‌انگیز — کارت منحصربه‌فرد با افکت نور متحرک ---------- */
+.shop-card.amazing{grid-column:1/-1;flex-direction:row;align-items:center;gap:14px;text-align:right;
+  padding:14px 16px;border-radius:18px;overflow:hidden;position:relative;
+  background:linear-gradient(100deg,rgba(66,36,4,.97),rgba(40,20,58,.97) 48%,rgba(10,36,58,.97));
+  border:2px solid rgba(255,214,120,.85);
+  animation:amzGlow 2.2s ease-in-out infinite}
+@keyframes amzGlow{
+  0%,100%{box-shadow:0 0 12px rgba(255,196,80,.25),inset 0 0 26px rgba(255,180,60,.07)}
+  50%{box-shadow:0 0 34px rgba(255,214,120,.6),inset 0 0 34px rgba(255,190,80,.16)}}
+/* پرتو نورِ چرخان پشت محتوا */
+.shop-card.amazing::before{content:'';position:absolute;inset:-90%;pointer-events:none;
+  background:conic-gradient(from 0deg,transparent 0 76%,rgba(255,236,170,.14) 87%,rgba(255,255,255,.4) 96%,transparent 100%);
+  animation:amzRay 3.6s linear infinite}
+@keyframes amzRay{to{transform:rotate(360deg)}}
+/* خط نورِ رونده روی کارت */
+.shop-card.amazing::after{content:'';position:absolute;top:-20%;bottom:-20%;width:58px;right:-100px;
+  pointer-events:none;transform:skewX(-18deg);
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.42),transparent);
+  animation:amzSweep 2.8s ease-in-out infinite}
+@keyframes amzSweep{0%{right:-100px}55%,100%{right:calc(100% + 100px)}}
+.shop-card.amazing>*{position:relative;z-index:1}
+.shop-card.amazing .amz-badge{position:absolute;top:0;left:18px;z-index:2;
+  background:linear-gradient(90deg,#ff9d3a,#ff4f8e);color:#fff;font-size:11px;font-weight:900;
+  padding:4px 13px;border-radius:0 0 10px 10px;box-shadow:0 2px 12px rgba(255,90,140,.55);
+  animation:amzPulse 1.6s ease-in-out infinite}
+@keyframes amzPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.amz-thumb{flex:0 0 auto;border:1px solid rgba(255,214,120,.55);
+  background:radial-gradient(circle at 50% 40%,#5a3a08,#241503)}
+.amz-mid{flex:1;display:flex;flex-direction:column;gap:5px;align-items:flex-start;min-width:0}
+.amz-name{font-size:17.5px;color:#ffe9a8;text-shadow:0 0 16px rgba(255,200,90,.6)}
+.amz-desc{font-size:12.5px;color:#ffe9c8;line-height:1.7}
+.shop-card.amazing .amz-btn{flex:0 0 auto;width:172px;font-size:14px;color:#4a1500;
+  background:linear-gradient(90deg,#ffb347,#ff5f8e,#ffb347);background-size:220% 100%;
+  animation:amzBtn 1.9s linear infinite}
+@keyframes amzBtn{0%{background-position:0% 0}100%{background-position:220% 0}}
+.shop-card.amazing .amz-btn:active{transform:scale(.95)}
+/* کارت‌های عادی کنار کارت ویژه کمی ساده‌تر دیده شوند تا پیشنهاد شگفت‌انگیز اول به چشم بیاید */
+.shop-card.best{border-color:rgba(232,184,75,.4)}
+
 /* HUD مسابقه — توقف کنار چیپ‌ها */
-.match-top{max-width:94vw;gap:8px}
+/* z-index:7 — نوار بالای مسابقه (و دکمهٔ ⏸) باید بالای ناحیهٔ جوی‌استیک باشد
+   وگرنه لمسِ دکمهٔ خروج به منو به جوی‌استیک می‌رود و کار نمی‌کند */
+.match-top{max-width:94vw;gap:8px;z-index:7}
 .match-top .pause-btn{position:static;flex:0 0 auto}
 .team-chip b{overflow:hidden;text-overflow:ellipsis}
 
