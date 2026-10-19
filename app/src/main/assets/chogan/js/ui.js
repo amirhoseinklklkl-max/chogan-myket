@@ -305,7 +305,7 @@ UI.renderShop=function(){
     aic.appendChild(acv); adCard.appendChild(aic);
     CH.G.itemIcon(acv,'reward',{});
     const atx=document.createElement('div'); atx.className='ad-txt';
-    atx.innerHTML='<div class="shop-name">تبلیغ جایزه‌دار 🎁</div><div class="ad-desc">آگهی را تا آخر ببین و ۱۰۰ سکه بگیر — هر وقت بخواهی، حتی پشت‌سرهم!</div>';
+    atx.innerHTML='<div class="shop-name">تبلیغ جایزه‌دار 🎁</div><div class="ad-desc">آگهی را تا آخر ببین — جایزه‌ات شانسیه: ۱۵۰ سکه یا ۱ الماس! هر وقت بخواهی، حتی پشت‌سرهم.</div>';
     adCard.appendChild(atx);
     const abtn=document.createElement('button');
     abtn.className='shop-buy buy';
@@ -362,7 +362,7 @@ UI.amazingCard=function(it){
 
 /* ---------- تبلیغ جایزه‌دار (اندروید: ادیوری — وب: شبیه‌سازی) ---------- */
 /* هیچ محدودیتی وجود ندارد؛ کاربر می‌تواند پشت‌سرهم تبلیغ ببیند.
-   فقط اگر تبلیغ تا آخر دیده شود ۱۰۰ سکه داده می‌شود. */
+   فقط اگر تبلیغ تا آخر دیده شود جایزه داده می‌شود — شانسی و اتفاقی: ۱۵۰ سکه یا ۱ الماس. */
 UI.adBusy=false; UI._adIv=null;
 UI.rewardedAd=function(){
   if(UI.adBusy)return;
@@ -392,9 +392,16 @@ UI.rewardedAd=function(){
 UI.adGrant=function(){
   clearInterval(UI._adIv); UI._adIv=null;
   UI.hideModal('ad-modal'); UI.adBusy=false;
-  CH.save.d.coins+=100; CH.save.write();
-  UI.refreshCoins(); CH.audio.play('coin'); CH.fx.confetti(40);
-  CH.toast('+۱۰۰ سکه از تبلیغ جایزه‌دار!');
+  // جایزهٔ شانسی و اتفاقی: ۱۵۰ سکه یا ۱ الماس (۵۰-۵۰)
+  if(Math.random()<0.5){
+    CH.save.d.coins+=150; CH.save.write();
+    UI.refreshCoins(); CH.audio.play('coin'); CH.fx.confetti(40);
+    CH.toast('+۱۵۰ سکه از تبلیغ جایزه‌دار!');
+  } else {
+    CH.save.d.gems+=1; CH.save.write();
+    UI.refreshCoins(); CH.audio.play('gem'); CH.fx.confetti(60);
+    CH.toast('🎉 +۱ الماس از تبلیغ جایزه‌دار!');
+  }
 };
 UI.adCancel=function(){
   clearInterval(UI._adIv); UI._adIv=null;

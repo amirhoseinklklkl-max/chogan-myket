@@ -25,12 +25,12 @@ CH.CHARS={
 /* ---------- جامه‌ها (رنگ لباس و اسب) ---------- */
 CH.OUTFITS={
   rustic:  {name:'جامه دهقانی', robe:'#7a6a4a', belt:'#4a3a24', hat:'#5a4632', bard:'#8a7a5a', price:0, gem:false, desc:'ساده و راحت، بوی نون تنوری می‌ده'},
-  turkman: {name:'جامه ترکمن', robe:'#8a3a3a', belt:'#3a1a1a', hat:'#4a2a2a', bard:'#a04a3a', price:400, gem:false, desc:'سرخ‌پوشِ تاخت‌زن‌های ترکمن'},
-  shirazi: {name:'جامه شیرازی', robe:'#c25a7a', belt:'#5a2a3a', hat:'#8a3a5a', bard:'#c25a7a', price:750, gem:false, desc:'به گلابِ شیراز آغشته است'},
-  esfahani:{name:'جامه اصفهانی', robe:'#1ba894', belt:'#e8b84b', hat:'#0e6e60', bard:'#1c7a6e', price:1150, gem:false, desc:'طرح کاشی‌های مسجد شیخ لطف‌الله'},
-  shabgard:{name:'جامه شب‌گرد', robe:'#23283e', belt:'#8a94a8', hat:'#14182a', bard:'#2a3350', price:1650, gem:false, desc:'آرام مثل شب، تند مثل باد'},
-  kashani: {name:'جامه کاشان', robe:'#b8862a', belt:'#7a5514', hat:'#6a4a1a', bard:'#caa84f', price:2300, gem:false, desc:'عطر گلاب و مسقطیِ کاشان'},
-  pahlavani:{name:'جامه پهلوانی', robe:'#8a2a2a', belt:'#3a3a44', hat:'#2a2a32', bard:'#8a2a2a', price:4600, gem:false, desc:'جامهٔ آجری میدان‌های پهلوانی'},
+  turkman: {name:'جامه ترکمن', robe:'#8a3a3a', belt:'#3a1a1a', hat:'#4a2a2a', bard:'#a04a3a', price:480, gem:false, desc:'سرخ‌پوشِ تاخت‌زن‌های ترکمن'},
+  shirazi: {name:'جامه شیرازی', robe:'#c25a7a', belt:'#5a2a3a', hat:'#8a3a5a', bard:'#c25a7a', price:900, gem:false, desc:'به گلابِ شیراز آغشته است'},
+  esfahani:{name:'جامه اصفهانی', robe:'#1ba894', belt:'#e8b84b', hat:'#0e6e60', bard:'#1c7a6e', price:1380, gem:false, desc:'طرح کاشی‌های مسجد شیخ لطف‌الله'},
+  shabgard:{name:'جامه شب‌گرد', robe:'#23283e', belt:'#8a94a8', hat:'#14182a', bard:'#2a3350', price:1980, gem:false, desc:'آرام مثل شب، تند مثل باد'},
+  kashani: {name:'جامه کاشان', robe:'#b8862a', belt:'#7a5514', hat:'#6a4a1a', bard:'#caa84f', price:2760, gem:false, desc:'عطر گلاب و مسقطیِ کاشان'},
+  pahlavani:{name:'جامه پهلوانی', robe:'#8a2a2a', belt:'#3a3a44', hat:'#2a2a32', bard:'#8a2a2a', price:5520, gem:false, desc:'جامهٔ آجری میدان‌های پهلوانی'},
   firouzeh:{name:'جامه فیروزه', robe:'#18b8a0', belt:'#e8b84b', hat:'#0e6e60', bard:'#1e9fd8', price:32, gem:true, desc:'فیروزهٔ نیشابور بر سینه'},
   royal:   {name:'جامه سلطنتی', robe:'#1c3a6e', belt:'#e8b84b', hat:'#caa84f', bard:'#caa84f', price:20, gem:true, desc:'جامه دربار شاه عباس، طلودوزی‌شده'},
   mehromah:{name:'جامه مهر و ماه', robe:'#5a3a8a', belt:'#e8b84b', hat:'#caa84f', bard:'#8a5ab8', price:50, gem:true, desc:'مهر بر سینه، ماه بر کلاه'}
@@ -40,24 +40,24 @@ CH.OUTFITS={
 CH.SHOP={
   mallets:[
     {id:'chobi_kohan', name:'چوب کهن پدربزرگ', price:0, gem:false, pow:1.0, acc:1.0, col:'#5f3d1e', desc:'همان چوب کهنه با نقطه‌های لکه‌های چراغ'},
-    {id:'chobi_tut',   name:'چوب توتِ کهک', price:480, gem:false, pow:1.06, acc:1.08, col:'#8a6a4a', desc:'سبک و خوش‌دست، مال روزهای اول'},
-    {id:'chobi_bid',   name:'چوب بیدِ زرنگار', price:850, gem:false, pow:1.1, acc:1.18, col:'#6a5a3a', desc:'سبک و فرم‌گرفته، دوستِ مچ دست'},
-    {id:'chobi_narvan', name:'چوب نارونِ دشت', price:1300, gem:false, pow:1.16, acc:1.08, col:'#a05a2a', desc:'کوبنده مثل باران بهشت‌باران'},
-    {id:'chobi_shamshad', name:'چوب شمشاد کمان‌کش', price:1850, gem:false, pow:1.22, acc:1.12, col:'#7a5a2a', desc:'سفت و کوبنده، مثل دستِ پهلوان'},
-    {id:'chobi_ars',   name:'چوب ارسِ کوهسار', price:2700, gem:false, pow:1.26, acc:1.2, col:'#5a4a3a', desc:'از ارسِ کوهسار تراشیده‌شده، خنک و استوار'},
-    {id:'chobi_pahlavan', name:'چوب پهلوانی رستم', price:4300, gem:false, pow:1.38, acc:1.15, col:'#4a3a5a', desc:'به سنگینی ضربهٔ رستم، به روشنی نامش'},
+    {id:'chobi_tut',   name:'چوب توتِ کهک', price:580, gem:false, pow:1.06, acc:1.08, col:'#8a6a4a', desc:'سبک و خوش‌دست، مال روزهای اول'},
+    {id:'chobi_bid',   name:'چوب بیدِ زرنگار', price:1020, gem:false, pow:1.1, acc:1.18, col:'#6a5a3a', desc:'سبک و فرم‌گرفته، دوستِ مچ دست'},
+    {id:'chobi_narvan', name:'چوب نارونِ دشت', price:1560, gem:false, pow:1.16, acc:1.08, col:'#a05a2a', desc:'کوبنده مثل باران بهشت‌باران'},
+    {id:'chobi_shamshad', name:'چوب شمشاد کمان‌کش', price:2220, gem:false, pow:1.22, acc:1.12, col:'#7a5a2a', desc:'سفت و کوبنده، مثل دستِ پهلوان'},
+    {id:'chobi_ars',   name:'چوب ارسِ کوهسار', price:3240, gem:false, pow:1.26, acc:1.2, col:'#5a4a3a', desc:'از ارسِ کوهسار تراشیده‌شده، خنک و استوار'},
+    {id:'chobi_pahlavan', name:'چوب پهلوانی رستم', price:5160, gem:false, pow:1.38, acc:1.15, col:'#4a3a5a', desc:'به سنگینی ضربهٔ رستم، به روشنی نامش'},
     {id:'chobi_mina',  name:'چوب میناکاری', price:28, gem:true, pow:1.2, acc:1.42, col:'#1e9fd8', desc:'دستهٔ میناکاری — چشمِ بازِ میدان'},
     {id:'chobi_zarrin', name:'چوب زرین پارس', price:25, gem:true, pow:1.32, acc:1.28, col:'#caa84f', gold:true, desc:'دستهٔ عاج، نقره‌کوبِ اصفهان'},
     {id:'chobi_tus',   name:'چوب شاهانهٔ طوس', price:55, gem:true, pow:1.45, acc:1.35, col:'#e8b84b', gold:true, desc:'چوب درباریان طوس با پوملِ یاقوت — سلطانِ چوب‌ها'}
   ],
   horses:[
-    {id:'badba',    name:'بادبه', price:450, gem:false, spd:1.0, stam:1.0, coat:'#7a5233', bard:'#8a7a5a', mane:'#3c2717', size:1.0, desc:'اسب پیر و باوفای تهمینه'},
-    {id:'ghazal',   name:'غزال شتردوان', price:1400, gem:false, spd:1.24, stam:0.92, coat:'#c49a6c', bard:'#a0845a', mane:'#8a6a4a', size:0.94, desc:'چابک‌ترین اسب دشت — ولی زود خسته می‌شه'},
-    {id:'shabdiv',  name:'شبدیز', price:2200, gem:false, spd:1.18, stam:1.08, coat:'#2e2420', bard:'#4a3a3a', mane:'#15100c', size:1.05, desc:'سیال مثل شب، تند مثل باد'},
-    {id:'yamut',    name:'یاموت ترکمن', price:3100, gem:false, spd:1.2, stam:1.16, coat:'#a0522d', bard:'#a04a3a', mane:'#3a1f10', size:1.02, desc:'یراق‌آلوی ترکمن، پُرعزم و سترگ'},
-    {id:'rakhsh',   name:'رخش کُهر', price:4200, gem:false, spd:1.08, stam:1.34, coat:'#9a7a5a', bard:'#6a4a2a', mane:'#4a3423', size:1.12, desc:'کُهرِ استوار و تنومند، هیچ‌وقت خسته نمی‌شه'},
-    {id:'baragh',   name:'براق سپید', price:5600, gem:false, spd:1.22, stam:1.2, coat:'#e8e2d4', bard:'#b8b0a0', mane:'#cfc7b4', size:1.04, blaze:'#fff', desc:'سپیدَمِ میدان با شبلِ نقره‌ای'},
-    {id:'azarakhsh', name:'آذرخش', price:7200, gem:false, spd:1.32, stam:1.12, coat:'#46315e', bard:'#2a1c3e', mane:'#1a1030', size:1.06, blaze:'#e8b84b', desc:'سیاه‌بادگانی با شبل زرین — برقِ چشم‌ها را می‌دزدد'},
+    {id:'badba',    name:'بادبه', price:540, gem:false, spd:1.0, stam:1.0, coat:'#7a5233', bard:'#8a7a5a', mane:'#3c2717', size:1.0, desc:'اسب پیر و باوفای تهمینه'},
+    {id:'ghazal',   name:'غزال شتردوان', price:1680, gem:false, spd:1.24, stam:0.92, coat:'#c49a6c', bard:'#a0845a', mane:'#8a6a4a', size:0.94, desc:'چابک‌ترین اسب دشت — ولی زود خسته می‌شه'},
+    {id:'shabdiv',  name:'شبدیز', price:2640, gem:false, spd:1.18, stam:1.08, coat:'#2e2420', bard:'#4a3a3a', mane:'#15100c', size:1.05, desc:'سیال مثل شب، تند مثل باد'},
+    {id:'yamut',    name:'یاموت ترکمن', price:3720, gem:false, spd:1.2, stam:1.16, coat:'#a0522d', bard:'#a04a3a', mane:'#3a1f10', size:1.02, desc:'یراق‌آلوی ترکمن، پُرعزم و سترگ'},
+    {id:'rakhsh',   name:'رخش کُهر', price:5040, gem:false, spd:1.08, stam:1.34, coat:'#9a7a5a', bard:'#6a4a2a', mane:'#4a3423', size:1.12, desc:'کُهرِ استوار و تنومند، هیچ‌وقت خسته نمی‌شه'},
+    {id:'baragh',   name:'براق سپید', price:6720, gem:false, spd:1.22, stam:1.2, coat:'#e8e2d4', bard:'#b8b0a0', mane:'#cfc7b4', size:1.04, blaze:'#fff', desc:'سپیدَمِ میدان با شبلِ نقره‌ای'},
+    {id:'azarakhsh', name:'آذرخش', price:8640, gem:false, spd:1.32, stam:1.12, coat:'#46315e', bard:'#2a1c3e', mane:'#1a1030', size:1.06, blaze:'#e8b84b', desc:'سیاه‌بادگانی با شبل زرین — برقِ چشم‌ها را می‌دزدد'},
     {id:'mahtab',   name:'مهتاب‌دوان', price:38, gem:true, spd:1.28, stam:1.22, coat:'#b8c4d8', bard:'#8a94a8', mane:'#8a94a8', size:1.03, blaze:'#fff', socks:'#e8eef8', desc:'نقره‌فام مثل شب مهتابی، با پاهای سپید'},
     {id:'simorgh',  name:'سیمرغ آتش‌پر', price:46, gem:true, spd:1.3, stam:1.28, coat:'#b8502a', bard:'#e8b84b', mane:'#5a1c0c', size:1.06, spots:'#e8b84b', desc:'افسانهٔ میدان با لکه‌های آتشین، اسبِ قهرمان‌ها'},
     {id:'parnian',  name:'پرنیان زرین', price:60, gem:true, spd:1.34, stam:1.3, coat:'#d8b040', bard:'#fff2c8', mane:'#8a6a14', size:1.05, spots:'#fff6d8', blaze:'#fff6d8', desc:'زرین‌پوشِ افسانه‌ای — آرزوی هر چوگان‌بازی'}
@@ -70,13 +70,11 @@ CH.SHOP={
     {id:'iap_almas15',  sku:'almas15',  name:'کیسهٔ الماس', kind:'gems', amount:15, priceLabel:'۱۰٬۰۰۰ تومان', desc:'۱۵ الماس گران‌بها'},
     {id:'iap_almas35',  sku:'almas35',  name:'صندوق الماس', kind:'gems', amount:35, priceLabel:'۲۵٬۰۰۰ تومان', desc:'۳۵ الماس درخشان'},
     {id:'iap_almas80',  sku:'almas80',  name:'خزانهٔ الماس', kind:'gems', amount:80, priceLabel:'۶۰٬۰۰۰ تومان', desc:'۸۰ الماس — گنجِ پنهانِ پارس'},
-    {id:'iap_amazing',  sku:'amazing',  name:'پیشنهاد شگفت‌انگیز', kind:'bundle', coins:1000, amount:100, priceLabel:'۸۹٬۰۰۰ تومان', desc:'۱۰۰۰ سکه + ۱۰۰ الماس — بیشترین ارزش!', amazing:true}
+    {id:'iap_amazing',  sku:'amazing',  name:'پیشنهاد شگفت‌انگیز', kind:'bundle', coins:3000, amount:200, priceLabel:'۸۹٬۰۰۰ تومان', desc:'۳۰۰۰ سکه + ۲۰۰ الماس — بیشترین ارزش!', amazing:true}
   ]
 };
 
-/* ---------- مراحل مرحله‌ای (۲۰ مرحله — هر مرحله حریف قوی‌تر) ----------
-   اسب تیم حریف هم متناسب با قدرت از فروشگاه انتخاب می‌شود: ضعیف بادبه، قوی آذرخش،
-   و قوی‌تر از آن اسب‌های الماسی (مهتاب‌دوان، سیمرغ، پرنیان) */
+/* ---------- مراحل مرحله‌ای (۲۰ مرحله — هر مرحله حریف قوی‌تر) ---------- */
 CH.LEVELS=[
   {n:1,name:'زمین دهکده',team:'دهکدهٔ شرقی',col:'#c0603a',dur:60,diff:.5,env:'village',goalN:3},
   {n:2,name:'دشت آفتاب',team:'طایفهٔ کوهپایه',col:'#7a6a3a',dur:70,diff:.58,env:'plain',goalN:3},
@@ -90,14 +88,14 @@ CH.LEVELS=[
   {n:10,name:'کویر سرخ',team:'تاخت‌زنان کویر',col:'#b8502a',dur:110,diff:1.1,env:'plain',goalN:5},
   {n:11,name:'ساحل زرینه',team:'ناخدایان زرینه',col:'#1e6e8a',dur:115,diff:1.16,env:'village',goalN:5},
   {n:12,name:'میدان افسانه',team:'ستارگان پارس',col:'#5a3a8a',dur:120,diff:1.22,env:'night',goalN:6},
-  {n:13,name:'میدان مهتاب',team:'سواران شبگرد',col:'#3a5a8a',dur:125,diff:1.26,env:'night',goalN:5},
-  {n:14,name:'کرانهٔ فیروزه',team:'دلیران جنوب',col:'#1e6e6a',dur:125,diff:1.28,env:'village',goalN:6},
-  {n:15,name:'کوچ سیمرغ',team:'آتش‌پرکان پارس',col:'#b8502a',dur:130,diff:1.3,env:'royal',goalN:6},
-  {n:16,name:'شکوه آتش',team:'سواران سیمرغ',col:'#c84a2a',dur:130,diff:1.32,env:'night',goalN:6},
-  {n:17,name:'آخرین دژ',team:'سرداران تاریکی',col:'#2a2a3e',dur:135,diff:1.34,env:'royal',goalN:6},
-  {n:18,name:'تالار زرین',team:'اسطوره‌های زرین',col:'#caa84f',dur:135,diff:1.36,env:'royal',goalN:6},
-  {n:19,name:'میدان اسطوره',team:'قهرمانان روزگار',col:'#8a2a4a',dur:140,diff:1.38,env:'night',goalN:7},
-  {n:20,name:'تاج پارس',team:'افسانه‌های پرنیان',col:'#d8b040',dur:145,diff:1.4,env:'royal',goalN:7}
+  {n:13,name:'میدان مهتاب',team:'شب‌روبان مهتاب',col:'#8a94a8',dur:122,diff:1.24,env:'night',goalN:6},
+  {n:14,name:'کرانهٔ فیروزه',team:'دریانوردان فیروزه',col:'#18b8a0',dur:125,diff:1.27,env:'village',goalN:6},
+  {n:15,name:'کوچ سیمرغ',team:'سواران سیمرغ',col:'#b8502a',dur:128,diff:1.3,env:'plain',goalN:6},
+  {n:16,name:'شکوه آتش',team:'نگهبانان آتش',col:'#c8433a',dur:130,diff:1.32,env:'royal',goalN:6},
+  {n:17,name:'آخرین دژ',team:'دژبانان کوهسار',col:'#5a4a3a',dur:132,diff:1.34,env:'plain',goalN:7},
+  {n:18,name:'تالار زرین',team:'زرین‌کلاهان',col:'#caa84f',dur:135,diff:1.36,env:'royal',goalN:7},
+  {n:19,name:'میدان اسطوره',team:'پهلوانان اسطوره',col:'#8a3a5a',dur:138,diff:1.38,env:'night',goalN:7},
+  {n:20,name:'تاج پارس',team:'گارد جاویدان',col:'#46315e',dur:140,diff:1.4,env:'royal',goalN:7}
 ];
 
 /* ---------- دیالوگ‌های داستان (۹ فصل) ----------
@@ -369,7 +367,7 @@ CH.QUESTS=[
       {type:'talk', npc:'khosrow', lines:D.ch5_khosrow, obj:'با استاد خسرو حرف بزن'},
       {type:'targets', n:6, area:'royalField', onFoot:false, goal:true, time:90, obj:'در ۹۰ ثانیه ۶ گل به دروازهٔ خالی بزن', reward:{coins:120}},
       {type:'talk', npc:'golnar', lines:D.ch5_pass, obj:'با گلنار صحبت کن'},
-      {type:'match', tag:'duel', cfg:{diff:.9,dur:70,goalN:2,team:'ساسان و یارش',col:'#2a2a3e',env:'royal',title:'دوئل با ساسان',myTeam:'تیم من'}, obj:'دوئل با ساسان!', reward:{coins:250}},
+      {type:'match', tag:'duel', cfg:{diff:.9,dur:70,goalN:2,team:'ساسان و یارش',col:'#2a2a3e',env:'royal',title:'دوئل با ساسان',myTeam:'تیم من',small:2}, obj:'دوئل ۲ به ۲ با ساسان!', reward:{coins:250}},
     ]},
   { ch:6, title:'آزمون آکادمی', steps:[
       {type:'talk', npc:'farhad', lines:D.ch6_trial, obj:'نزد فرهاد در آکادمی برو'},
